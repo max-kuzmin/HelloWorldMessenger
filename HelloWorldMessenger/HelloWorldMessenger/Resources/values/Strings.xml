@@ -9,6 +9,6 @@
   <string name="SingIn">Sing In</string>
   <string name="Register">Register</string>
   <string name="LoginPassError">Wrong login or password</string>
-  <string name="ServerAddress">http://localhost/HelloWorldAPI/</string>
+  <string name="Dialogs">Dialogs</string>
   
 </resources>

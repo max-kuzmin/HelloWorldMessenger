@@ -15,12 +15,30 @@ using System.IO;
 
 namespace HelloWorldMessenger
 {
-    class Helpers
+    public class Helpers
     {
-        public static JsonValue RequestToAPI(string server, string param)
+
+        public static string Server = "http://169.254.80.80/HelloWorldAPI/";
+        static string CookieDomain = "169.254.80.80";
+
+
+        static bool online = true;
+
+        public static bool Online
         {
-            Uri address = new Uri(new Uri(server), param);
+            get
+            {
+                return online;
+            }
+
+        }
+
+        public static JsonValue RequestToAPI(string param)
+        {
+            Uri address = new Uri(new Uri(Server), param);
             HttpWebRequest req = new HttpWebRequest(address);
+
+            req.CookieContainer = GetCookieFromSetting();
 
             HttpWebResponse res = (HttpWebResponse)req.GetResponse();
 
@@ -36,6 +54,36 @@ namespace HelloWorldMessenger
 
             return json;
 
+        }
+
+
+
+
+        public static CookieContainer GetCookieFromSetting()
+        {
+            ISharedPreferences prefs = Application.Context.GetSharedPreferences("Setting", FileCreationMode.Private);
+
+            string cookie = prefs.GetString("PHPSESSID", "");
+
+            CookieContainer container = new CookieContainer();
+
+            if (cookie!="")
+            {
+                Cookie result = new Cookie("PHPSESSID", cookie) { Domain = CookieDomain };
+                container.Add(result);
+            }
+
+
+            return container;
+        }
+
+
+        public static DateTime FromUnixTime(long seconds)
+        {
+            DateTime date = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+            date = date.AddSeconds(seconds).ToLocalTime();
+
+            return date;
         }
     }
 }

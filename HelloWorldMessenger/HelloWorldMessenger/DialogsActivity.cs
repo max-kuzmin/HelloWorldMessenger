@@ -9,17 +9,166 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using System.Json;
+using Java.Lang;
+using System.Collections;
 
 namespace HelloWorldMessenger
 {
-    [Activity(Label = "DialogsActivity")]
+    [Activity(Theme = "@android:style/Theme.Holo")]
     public class DialogsActivity : Activity
     {
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.Dialogs);
-            // Create your application here
+
+
+            this.SetTitle(Resource.String.Dialogs);
+            
+        }
+
+
+        protected override void OnStart()
+        {
+            base.OnStart();
+
+            JsonValue json = Helpers.RequestToAPI("login/check");
+
+            if (!json.ContainsKey("login") && Helpers.Online)
+            {
+                StartActivity(new Intent(this, typeof(DialogsActivity)));
+                return;
+            }
+            else
+            {
+
+
+
+                ListView dialogs = FindViewById<ListView>(Resource.Id.DialogsList);
+                dialogs.ItemClick += Dialogs_ItemClick;
+
+                List<Dialog> items = new List<Dialog>();
+
+                JsonValue jsonItems = Helpers.RequestToAPI("dialog/show");
+
+                if (jsonItems.JsonType == JsonType.Array || !jsonItems.ContainsKey("status"))
+                {
+                    foreach (JsonValue item in jsonItems)
+                    {
+                        items.Add(new Dialog(item["dialog_id"], item["name"], item["users"], item["time"]));
+                    }
+
+                }
+
+                dialogs.Adapter = new DialogsAdapter(this, items);
+                
+
+
+
+            }
+        }
+
+        private void Dialogs_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
+        {
+            //open message activity
+        }
+    }
+
+    public class DialogsAdapter : BaseAdapter<Dialog>
+    {
+
+        Context ctx;
+        List<Dialog> list;
+
+
+
+        public void AddItems(Dialog[] item)
+        {
+            //add items to show
+
+
+            throw new NotImplementedException();
+        }
+
+
+        public DialogsAdapter(Context context, IEnumerable<Dialog> items)
+        {
+            ctx = context;
+            list = new List<Dialog>(items);
+
+            //сортировка по времени
+            list.Sort((Dialog x, Dialog y) => {
+
+                if (x.Time > y.Time) return 1;
+                else if (x.Time < y.Time) return -1;
+                else return 0;
+
+            });
+        }
+
+        public override Dialog this[int position]
+        {
+            get
+            {
+                return list.ElementAt(position);
+            }
+        }
+
+        public override int Count
+        {
+            get
+            {
+                return list.Count;
+            }
+        }
+
+        public override Java.Lang.Object GetItem(int position)
+        {
+            return list.ElementAt(position);
+        }
+
+        public override long GetItemId(int position)
+        {
+            return list.ElementAt(position).Id;
+        }
+
+        public override View GetView(int position, View convertView, ViewGroup parent)
+        {
+            View view = convertView;
+            if (view == null)
+            {
+                view = View.Inflate(ctx, Resource.Layout.DialogListItem, null);
+            }
+
+            view.FindViewById<TextView>(Resource.Id.DialogNameListItem).Text = list.ElementAt(position).Name;
+            view.FindViewById<TextView>(Resource.Id.DialogMembersListItem).Text = list.ElementAt(position).Members;
+
+            DateTime date = Helpers.FromUnixTime(list.ElementAt(position).Time);
+
+            view.FindViewById<TextView>(Resource.Id.DialogTimeListItem).Text = date.ToShortDateString() +" " + date.ToLongTimeString();
+
+
+
+            return view;
+        }
+
+    }
+
+
+    public class Dialog: Java.Lang.Object
+    {
+        public string Name = "";
+        public string Members = "";
+        public long Id = 0;
+        public long Time = 0;
+
+        public Dialog(long id, string name, string members, long time)
+        {
+            Name = name;
+            Members = members;
+            Id = id;
+            Time = time;
         }
     }
 }
