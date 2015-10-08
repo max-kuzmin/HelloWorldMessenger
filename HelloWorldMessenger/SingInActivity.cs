@@ -37,24 +37,16 @@ namespace HelloWorldMessenger
             if (login.Length>=4 && pass.Length>=4)
             {
                 string param = "login?login=" + login + "&pass=" + pass;
-                Uri address = new Uri(new Uri(GetString(Resource.String.ServerAddress)), param);
-                HttpWebRequest req = new HttpWebRequest(address);
-
-                HttpWebResponse res = (HttpWebResponse)req.GetResponse();
-
-                StreamReader reader = new StreamReader(res.GetResponseStream());
 
 
-                string resText = reader.ReadToEnd();
+                JsonValue res = Helpers.RequestToAPI(GetString(Resource.String.ServerAddress), param);
 
-                JsonValue json = JsonValue.Parse(resText);
+                if (res["status"] = "true")
+                {
+                    StartActivity(new Intent("DialogsActivity"));
+                    return;
+                }
 
-
-
-
-
-
-                return;
             }
 
             Toast.MakeText(this, Resource.String.LoginPassError, ToastLength.Long);
