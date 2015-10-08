@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <TextView
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="match_parent"
+        android:layout_height="51.8dp"
+        android:id="@+id/AppName1"
+        android:layout_marginBottom="10.0dp"
+        android:layout_marginTop="66.2dp"
+        android:text="@string/AppName1"
+        android:textSize="40dp"
+        android:gravity="center" />
+    <TextView
+        android:text="@string/AppName2"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/AppName2"
+        android:gravity="center"
+        android:layout_marginBottom="50dp" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/LoginField"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:hint="@string/Login" />
+    <EditText
+        android:inputType="textPassword"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/PassField"
+        android:layout_marginRight="30dp"
+        android:layout_marginLeft="30dp"
+        android:hint="@string/Password" />
+    <Button
+        android:id="@+id/SingInButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/SingIn"
+        android:layout_marginTop="49.6dp"
+        android:layout_marginLeft="70dp"
+        android:layout_marginRight="70dp" />
+    <Button
+        android:id="@+id/RegisterButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/Register"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp" />
+</LinearLayout>

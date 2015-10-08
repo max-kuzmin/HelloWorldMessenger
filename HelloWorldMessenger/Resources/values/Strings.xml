@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="Hello">Hello World, Click Me!</string>
+    <string name="ApplicationName">HelloWorldMessenger</string>
+    <string name="AppName1">HelloWorld</string>
+    <string name="AppName2">messenger</string>
+  <string name="Login">Login</string>
+  <string name="Password">Password</string>
+  <string name="SingIn">Sing In</string>
+  <string name="Register">Register</string>
+  <string name="LoginPassError">Wrong login or password</string>
+  <string name="ServerAddress">http://localhost/HelloWorldAPI/</string>
+  
+</resources>
