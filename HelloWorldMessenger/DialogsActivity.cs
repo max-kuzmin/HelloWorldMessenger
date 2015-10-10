@@ -15,7 +15,7 @@ using System.Collections;
 
 namespace HelloWorldMessenger
 {
-    [Activity(Theme = "@android:style/Theme.Holo")]
+    [Activity(Theme = "@android:style/Theme.Holo.Light", MainLauncher = true)]
     public class DialogsActivity : Activity
     {
         protected override void OnCreate(Bundle bundle)
@@ -29,13 +29,65 @@ namespace HelloWorldMessenger
         }
 
 
+        public override bool OnCreateOptionsMenu(IMenu menu)
+        {
+            MenuInflater.Inflate(Resource.Layout.DialogsMenu, menu);
+
+            //IMenuItem item = menu.FindItem(Resource.Id.AddDialogButton);
+            //item.SetOnMenuItemClickListener(new CreateDialogClick(this, item.Handle));
+
+            return base.OnCreateOptionsMenu(menu);
+        }
+
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+
+            if (item.ItemId == Resource.Id.AddDialogButton)
+            {
+                StartActivity(new Intent(this, typeof(SearchUsersActivity)));
+            }
+
+            return base.OnOptionsItemSelected(item);
+        }
+
+
+
+        //class CreateDialogClick : IMenuItemOnMenuItemClickListener
+        //{
+        //    Context ctx;
+        //    IntPtr h;
+
+        //    public CreateDialogClick(Context context, IntPtr handle)
+        //    {
+        //        ctx = context;
+        //        h = handle;
+        //    }
+
+        //    public IntPtr Handle
+        //    {
+        //        get
+        //        {
+        //            return h;
+        //        }
+        //    }
+
+        //    public void Dispose() {}
+
+        //    public bool OnMenuItemClick(IMenuItem item)
+        //    {
+        //        ctx.StartActivity(new Intent(ctx, typeof(SearchUsersActivity)));
+        //        return true;
+        //    }
+        //}
+
+
         protected override void OnStart()
         {
             base.OnStart();
 
-            JsonValue json = Helpers.RequestToAPI("login/check");
+            JsonValue json = HelpersAPI.RequestToAPI("login/check");
 
-            if (!json.ContainsKey("login") && Helpers.Online)
+            if (!json.ContainsKey("login") && HelpersAPI.Online)
             {
                 StartActivity(new Intent(this, typeof(DialogsActivity)));
                 return;
@@ -50,7 +102,7 @@ namespace HelloWorldMessenger
 
                 List<Dialog> items = new List<Dialog>();
 
-                JsonValue jsonItems = Helpers.RequestToAPI("dialog/show");
+                JsonValue jsonItems = HelpersAPI.RequestToAPI("dialog/show");
 
                 if (jsonItems.JsonType == JsonType.Array || !jsonItems.ContainsKey("status"))
                 {
@@ -144,7 +196,7 @@ namespace HelloWorldMessenger
             view.FindViewById<TextView>(Resource.Id.DialogNameListItem).Text = list.ElementAt(position).Name;
             view.FindViewById<TextView>(Resource.Id.DialogMembersListItem).Text = list.ElementAt(position).Members;
 
-            DateTime date = Helpers.FromUnixTime(list.ElementAt(position).Time);
+            DateTime date = HelpersAPI.FromUnixTime(list.ElementAt(position).Time);
 
             view.FindViewById<TextView>(Resource.Id.DialogTimeListItem).Text = date.ToShortDateString() +" " + date.ToLongTimeString();
 

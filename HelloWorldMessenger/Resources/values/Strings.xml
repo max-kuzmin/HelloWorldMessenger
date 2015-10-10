@@ -10,5 +10,11 @@
   <string name="Register">Register</string>
   <string name="LoginPassError">Wrong login or password</string>
   <string name="Dialogs">Dialogs</string>
+  <string name="Name">Name</string>
+<string name="Info">Info</string>
+  <string name="RegError">Registration error</string>
+  <string name="RegComplete">Registration succsessfully completed</string>
+  <string name="NoInternet">No internet</string>
+  <string name="CreateDialog">Create dialog</string>
   
 </resources>
