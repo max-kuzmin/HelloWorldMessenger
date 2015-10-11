@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/UserListItem"
+    android:paddingTop="10dp">
+    <TextView
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/UserLoginListItem"
+        android:layout_width="192.4dp"
+        android:layout_height="31.4dp" />
+    <TextView
+        android:text="Small Text"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:id="@+id/UserNameListItem"
+        android:layout_width="183.6dp"
+        android:layout_height="31.4dp" />
+</LinearLayout>

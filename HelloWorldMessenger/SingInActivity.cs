@@ -11,7 +11,7 @@ using System.IO;
 
 namespace HelloWorldMessenger
 {
-    [Activity(MainLauncher = false, Icon = "@drawable/icon", Theme = "@android:style/Theme.Holo.Light.NoActionBar")]
+    [Activity(MainLauncher = true, Icon = "@drawable/icon", Theme = "@android:style/Theme.Holo.Light.NoActionBar")]
     public class SingInActivity : Activity
     {
 
@@ -43,8 +43,8 @@ namespace HelloWorldMessenger
 
             if (HelpersAPI.AuthCheckAPI())
             {
-
                 StartActivity(new Intent(this, typeof(DialogsActivity)));
+                return;
             }
 
 
@@ -57,8 +57,8 @@ namespace HelloWorldMessenger
 
             if (HelpersAPI.SinginToAPI(login, pass))
             {
-
                 StartActivity(new Intent(this, typeof(DialogsActivity)));
+                return;
             }
 
 

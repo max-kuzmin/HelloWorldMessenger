@@ -21,6 +21,9 @@ namespace HelloWorldMessenger
         static string server = "http://169.254.80.80/HelloWorldAPI/";
         static string CookieDomain = "169.254.80.80";
 
+        //static string server = "http://gsomgsom.icycoolhosting.com/HelloWorldAPI/";
+        //static string CookieDomain = "gsomgsom.icycoolhosting.com";
+
 
         static bool online = true;
 
