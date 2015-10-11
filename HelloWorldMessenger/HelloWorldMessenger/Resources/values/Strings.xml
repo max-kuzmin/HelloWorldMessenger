@@ -16,5 +16,6 @@
   <string name="RegComplete">Registration succsessfully completed</string>
   <string name="NoInternet">No internet</string>
   <string name="CreateDialog">Create dialog</string>
-  
+  <string name="Search">Search</string>
+  <string name="Query">Query</string>
 </resources>

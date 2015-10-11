@@ -63,6 +63,7 @@
     <Compile Include="DialogsActivity.cs" />
     <Compile Include="HelpersAPI.cs" />
     <Compile Include="MessagesActivity.cs" />
+    <Compile Include="UserInfoActivity.cs" />
     <Compile Include="RegisterActivity.cs" />
     <Compile Include="SearchUsersActivity.cs" />
     <Compile Include="SingInActivity.cs" />
@@ -87,6 +88,10 @@
     <AndroidResource Include="Resources\layout\Messages.axml">
       <SubType>AndroidResource</SubType>
     </AndroidResource>
+    <AndroidResource Include="Resources\layout\UserListItem.axml">
+      <SubType>AndroidResource</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\UserInfo.axml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\SingIn.axml" />

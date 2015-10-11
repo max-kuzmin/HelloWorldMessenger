@@ -15,7 +15,7 @@ using System.Collections;
 
 namespace HelloWorldMessenger
 {
-    [Activity(Theme = "@android:style/Theme.Holo.Light", MainLauncher = true)]
+    [Activity(Theme = "@android:style/Theme.Holo.Light", MainLauncher = false)]
     public class DialogsActivity : Activity
     {
         protected override void OnCreate(Bundle bundle)
@@ -85,16 +85,9 @@ namespace HelloWorldMessenger
         {
             base.OnStart();
 
-            JsonValue json = HelpersAPI.RequestToAPI("login/check");
 
-            if (!json.ContainsKey("login") && HelpersAPI.Online)
+            if (HelpersAPI.AuthCheckAPI())
             {
-                StartActivity(new Intent(this, typeof(DialogsActivity)));
-                return;
-            }
-            else
-            {
-
 
 
                 ListView dialogs = FindViewById<ListView>(Resource.Id.DialogsList);

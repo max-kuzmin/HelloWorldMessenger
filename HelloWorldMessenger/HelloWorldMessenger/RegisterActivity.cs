@@ -35,7 +35,7 @@ namespace HelloWorldMessenger
 
             if (login.Length>0 && pass.Length>0 && name.Length>0 && info.Length>0)
             {
-                string param = "register/login=" + login + "&pass=" + pass + "&name=" + name + "&info=" + info;
+                string param = "register?login=" + login + "&pass=" + pass + "&name=" + name + "&info=" + info;
 
                 JsonValue result = HelpersAPI.RequestToAPI(param);
 
@@ -62,6 +62,12 @@ namespace HelloWorldMessenger
         protected override void OnStart()
         {
             base.OnStart();
+
+            if (!HelpersAPI.AuthCheckAPI())
+            {
+                StartActivity(new Intent(this, typeof(SingInActivity)));
+                return;
+            }
 
         }
     }
