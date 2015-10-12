@@ -18,6 +18,9 @@ namespace HelloWorldMessenger
     [Activity(Label = "SearchUsersActivity", Theme = "@android:style/Theme.Holo.Light.NoActionBar")]
     public class SearchUsersActivity : Activity
     {
+
+        UsersAdapter adapter = null;
+
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
@@ -28,6 +31,7 @@ namespace HelloWorldMessenger
 
             Button search = FindViewById<Button>(Resource.Id.SearchButton);
             search.Click += Search_Click;
+
         }
 
         private void Search_Click(object sender, EventArgs e)
@@ -52,13 +56,20 @@ namespace HelloWorldMessenger
 
                 }
 
-                usersList.Adapter = new UsersAdapter(this, items);
+                adapter = new UsersAdapter(this, items);
+                usersList.Adapter = adapter;
             }
         }
 
         private void UsersList_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
             //переход на страницу пользователя
+
+
+            string login = ((User)adapter.GetItem(e.Position)).Login;
+            Bundle b = new Bundle();
+            b.PutString("login", login);
+            StartActivity(new Intent(this, typeof(SearchUsersActivity)), b);
         }
 
         protected override void OnStart()

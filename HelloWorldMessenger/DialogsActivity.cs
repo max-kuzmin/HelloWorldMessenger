@@ -18,6 +18,10 @@ namespace HelloWorldMessenger
     [Activity(Theme = "@android:style/Theme.Holo.Light", MainLauncher = false)]
     public class DialogsActivity : Activity
     {
+
+        DialogsAdapter adapter = null;
+
+
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
@@ -106,8 +110,9 @@ namespace HelloWorldMessenger
 
                 }
 
-                dialogs.Adapter = new DialogsAdapter(this, items);
                 
+                adapter = new DialogsAdapter(this, items);
+                dialogs.Adapter = adapter;
 
 
 
@@ -116,7 +121,11 @@ namespace HelloWorldMessenger
 
         private void Dialogs_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
-            //open message activity
+
+            long dialog_id = ((Dialog)adapter.GetItem(e.Position)).Id;
+            Bundle b = new Bundle();
+            b.PutLong("dialog_id", dialog_id);
+            StartActivity(new Intent(this, typeof(SearchUsersActivity)), b);
         }
     }
 

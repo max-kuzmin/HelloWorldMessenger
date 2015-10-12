@@ -18,4 +18,6 @@
   <string name="CreateDialog">Create dialog</string>
   <string name="Search">Search</string>
   <string name="Query">Query</string>
+  <string name="SendMessage">Send</string>
+  <string name="Message">Message</string>
 </resources>
