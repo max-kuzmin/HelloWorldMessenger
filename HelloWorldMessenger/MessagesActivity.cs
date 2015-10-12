@@ -11,13 +11,16 @@ using Android.Views;
 using Android.Widget;
 using System.Json;
 
+
 namespace HelloWorldMessenger
 {
-    [Activity(Label = "MessagesActivity")]
+    [Activity(Theme = "@android:style/Theme.Holo.Light")]
     public class MessagesActivity : Activity
     {
 
         long dialog_id = 0;
+
+        MessagesAdapter adapter = null;
 
 
         protected override void OnCreate(Bundle bundle)
@@ -25,8 +28,9 @@ namespace HelloWorldMessenger
             base.OnCreate(bundle);
 
             SetContentView(Resource.Layout.Messages);
+            this.SetTitle(Resource.String.Messages);
 
-            dialog_id = bundle.GetLong("dialog_id");
+            dialog_id = Intent.GetLongExtra("dialog_id", 0);
         }
 
 
@@ -38,6 +42,7 @@ namespace HelloWorldMessenger
             if (!HelpersAPI.AuthCheckAPI())
             {
                 StartActivity(new Intent(this, typeof(SingInActivity)));
+                return;
             }
 
 
@@ -54,8 +59,8 @@ namespace HelloWorldMessenger
             messages.ItemClick += Messages_ItemClick;
 
             List<MessageData> items = new List<MessageData>();
-
-            JsonValue jsonItems = HelpersAPI.RequestToAPI("message/show?dialog_id="+dialog_id);
+            string param = "message/show?dialog_id=" + dialog_id+"&time=0";
+            JsonValue jsonItems = HelpersAPI.RequestToAPI(param);
 
             if (jsonItems.JsonType == JsonType.Array || !jsonItems.ContainsKey("status"))
             {
@@ -65,8 +70,9 @@ namespace HelloWorldMessenger
                 }
 
             }
-
-            messages.Adapter = new MessagesAdapter(this, items);
+            adapter = new MessagesAdapter(this, items);
+            messages.Adapter = adapter;
+            messages.SetSelection(messages.Adapter.Count - 1);
 
 
         }
@@ -76,18 +82,33 @@ namespace HelloWorldMessenger
 
             EditText messageText = FindViewById<EditText>(Resource.Id.MessageField);
             string param = "message/add?dialog_id=" + dialog_id + "&text=" + messageText.Text;
+            messageText.Text = "";
             JsonValue result = HelpersAPI.RequestToAPI(param);
             if (result.ContainsKey("status") && result["status"] == "true")
             {
+                
+                List<MessageData> items = new List<MessageData>();
+                long lastTime = ((MessageData)adapter.GetItem(adapter.Count - 1)).Time;
+                string param2 = "message/show?dialog_id=" + dialog_id + "&time="+ lastTime;
+                JsonValue jsonItems = HelpersAPI.RequestToAPI(param2);
+                if (jsonItems.JsonType == JsonType.Array || !jsonItems.ContainsKey("status"))
+                {
+                    foreach (JsonValue item in jsonItems)
+                    {
+                        items.Add(new MessageData(item["message_id"], item["text"], item["login"], item["time"]));
+                    }
+                    adapter.AddItems(items);
 
+                    ListView messages = FindViewById<ListView>(Resource.Id.MessagesList);
+                    messages.SetSelection(messages.Adapter.Count - 1);
+                }
             }
-            //принимает диалог айди
             
         }
 
         private void Messages_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
-            //клик на сообщениит
+            //клик на сообщении
         }
     }
 
@@ -101,12 +122,12 @@ namespace HelloWorldMessenger
 
 
 
-        public void AddItems(MessageData[] item)
+        public void AddItems(List<MessageData> items)
         {
-            //add items to show
+            items.Sort(Comparator);
+            list.AddRange(items);
+            this.NotifyDataSetChanged();
 
-
-            throw new NotImplementedException();
         }
 
 
@@ -116,13 +137,14 @@ namespace HelloWorldMessenger
             list = new List<MessageData>(items);
 
             //сортировка по времени
-            list.Sort((MessageData x, MessageData y) => {
+            list.Sort(Comparator);
+        }
 
-                if (x.Time > y.Time) return 1;
-                else if (x.Time < y.Time) return -1;
-                else return 0;
-
-            });
+        private static int Comparator(MessageData x, MessageData y)
+        {
+            if (x.Time > y.Time) return 1;
+            else if (x.Time < y.Time) return -1;
+            else return 0;
         }
 
         public override MessageData this[int position]
@@ -167,7 +189,8 @@ namespace HelloWorldMessenger
 
             if (HelpersAPI.MyLogin == list.ElementAt(position).Login)
             {
-                view.FindViewById<LinearLayout>(Resource.Id.MessageListItem).SetGravity(GravityFlags.Right);
+                view.FindViewById<TextView>(Resource.Id.MessageTextListItem).Gravity = GravityFlags.Right;
+                view.FindViewById<TextView>(Resource.Id.MessageTimeListItem).Gravity = GravityFlags.Right;
             }
 
 

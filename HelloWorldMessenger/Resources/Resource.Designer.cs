@@ -233,6 +233,9 @@ namespace HelloWorldMessenger
 			// aapt resource value: 0x7f040013
 			public const int Message = 2130968595;
 			
+			// aapt resource value: 0x7f040014
+			public const int Messages = 2130968596;
+			
 			// aapt resource value: 0x7f04000a
 			public const int Name = 2130968586;
 			

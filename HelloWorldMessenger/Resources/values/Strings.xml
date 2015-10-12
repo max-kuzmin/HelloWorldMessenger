@@ -20,4 +20,5 @@
   <string name="Query">Query</string>
   <string name="SendMessage">Send</string>
   <string name="Message">Message</string>
+  <string name="Messages">Messages</string>
 </resources>

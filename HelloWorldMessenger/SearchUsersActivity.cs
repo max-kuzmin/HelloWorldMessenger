@@ -67,9 +67,9 @@ namespace HelloWorldMessenger
 
 
             string login = ((User)adapter.GetItem(e.Position)).Login;
-            Bundle b = new Bundle();
-            b.PutString("login", login);
-            StartActivity(new Intent(this, typeof(SearchUsersActivity)), b);
+            Intent intent = new Intent(this, typeof(UserInfoActivity));
+            intent.PutExtra("login", login);
+            StartActivity(intent);
         }
 
         protected override void OnStart()
