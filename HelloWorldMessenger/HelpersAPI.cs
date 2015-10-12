@@ -12,11 +12,15 @@ using Android.Views;
 using Android.Widget;
 using System.Net;
 using System.IO;
+using Android.Net;
 
 namespace HelloWorldMessenger
 {
     public class HelpersAPI
     {
+
+        //doto сохранение диалогов в базе, открытие списка диалогов из базы без интренета, проверка авторизации без интернета!!!!!!!!!
+        //разлогивание
 
         static string server = "http://169.254.80.80/HelloWorldAPI/";
         static string CookieDomain = "169.254.80.80";
@@ -60,7 +64,13 @@ namespace HelloWorldMessenger
 
             try
             {
-                Uri address = new Uri(new Uri(Server), param);
+                //проверка на подключение к сети /////////////////////////////////
+                ConnectivityManager conMgr = (ConnectivityManager)Application.Context.GetSystemService(Context.ConnectivityService);
+                NetworkInfo netInfo = conMgr.ActiveNetworkInfo;
+                if (netInfo == null || !netInfo.IsConnected) throw new Exception();
+
+                //запрос
+                System.Uri address = new System.Uri(new System.Uri(Server), param);
                 HttpWebRequest req = new HttpWebRequest(address);
                 req.CookieContainer = GetCookieFromSetting();
                 req.Timeout = 1000;
@@ -127,9 +137,11 @@ namespace HelloWorldMessenger
 
                 if (login.Length > 0 && pass.Length > 0)
                 {
+
+                    //запрос
                     string param = "login?login=" + login + "&pass=" + pass;
 
-                    Uri address = new Uri(new Uri(Server), param);
+                    System.Uri address = new System.Uri(new System.Uri(Server), param);
                     HttpWebRequest req = new HttpWebRequest(address);
                     req.Timeout = 1000;
                     HttpWebResponse res = (HttpWebResponse)req.GetResponse();
