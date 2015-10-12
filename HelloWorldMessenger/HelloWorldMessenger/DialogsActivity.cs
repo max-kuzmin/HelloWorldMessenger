@@ -56,33 +56,6 @@ namespace HelloWorldMessenger
 
 
 
-        //class CreateDialogClick : IMenuItemOnMenuItemClickListener
-        //{
-        //    Context ctx;
-        //    IntPtr h;
-
-        //    public CreateDialogClick(Context context, IntPtr handle)
-        //    {
-        //        ctx = context;
-        //        h = handle;
-        //    }
-
-        //    public IntPtr Handle
-        //    {
-        //        get
-        //        {
-        //            return h;
-        //        }
-        //    }
-
-        //    public void Dispose() {}
-
-        //    public bool OnMenuItemClick(IMenuItem item)
-        //    {
-        //        ctx.StartActivity(new Intent(ctx, typeof(SearchUsersActivity)));
-        //        return true;
-        //    }
-        //}
 
 
         protected override void OnStart()
@@ -97,7 +70,7 @@ namespace HelloWorldMessenger
                 ListView dialogs = FindViewById<ListView>(Resource.Id.DialogsList);
                 dialogs.ItemClick += Dialogs_ItemClick;
 
-                List<Dialog> items = new List<Dialog>();
+                List<DialogData> items = new List<DialogData>();
 
                 JsonValue jsonItems = HelpersAPI.RequestToAPI("dialog/show");
 
@@ -105,7 +78,7 @@ namespace HelloWorldMessenger
                 {
                     foreach (JsonValue item in jsonItems)
                     {
-                        items.Add(new Dialog(item["dialog_id"], item["name"], item["users"], item["time"]));
+                        items.Add(new DialogData(item["dialog_id"], item["name"], item["users"], item["time"]));
                     }
 
                 }
@@ -122,22 +95,22 @@ namespace HelloWorldMessenger
         private void Dialogs_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
 
-            long dialog_id = ((Dialog)adapter.GetItem(e.Position)).Id;
-            Bundle b = new Bundle();
-            b.PutLong("dialog_id", dialog_id);
-            StartActivity(new Intent(this, typeof(SearchUsersActivity)), b);
+            long dialog_id = ((DialogData)adapter.GetItem(e.Position)).Id;
+            Intent intent = new Intent(this, typeof(MessagesActivity));
+            intent.PutExtra("dialog_id", dialog_id);
+            StartActivity(intent);
         }
     }
 
-    public class DialogsAdapter : BaseAdapter<Dialog>
+    public class DialogsAdapter : BaseAdapter<DialogData>
     {
 
         Context ctx;
-        List<Dialog> list;
+        List<DialogData> list;
 
 
 
-        public void AddItems(Dialog[] item)
+        public void AddItems(DialogData[] item)
         {
             //add items to show
 
@@ -146,22 +119,22 @@ namespace HelloWorldMessenger
         }
 
 
-        public DialogsAdapter(Context context, IEnumerable<Dialog> items)
+        public DialogsAdapter(Context context, IEnumerable<DialogData> items)
         {
             ctx = context;
-            list = new List<Dialog>(items);
+            list = new List<DialogData>(items);
 
             //сортировка по времени
-            list.Sort((Dialog x, Dialog y) => {
+            list.Sort((DialogData x, DialogData y) => {
 
-                if (x.Time > y.Time) return 1;
-                else if (x.Time < y.Time) return -1;
+                if (x.Time > y.Time) return -1;
+                else if (x.Time < y.Time) return 1;
                 else return 0;
 
             });
         }
 
-        public override Dialog this[int position]
+        public override DialogData this[int position]
         {
             get
             {
@@ -210,14 +183,14 @@ namespace HelloWorldMessenger
     }
 
 
-    public class Dialog: Java.Lang.Object
+    public class DialogData: Java.Lang.Object
     {
         public string Name = "";
         public string Members = "";
         public long Id = 0;
         public long Time = 0;
 
-        public Dialog(long id, string name, string members, long time)
+        public DialogData(long id, string name, string members, long time)
         {
             Name = name;
             Members = members;

@@ -62,7 +62,10 @@
   <ItemGroup>
     <Compile Include="DialogsActivity.cs" />
     <Compile Include="HelpersAPI.cs" />
+    <Compile Include="LocalDB.cs" />
     <Compile Include="MessagesActivity.cs" />
+    <Compile Include="SQLite.cs" />
+    <Compile Include="SQLiteAsync.cs" />
     <Compile Include="UserInfoActivity.cs" />
     <Compile Include="RegisterActivity.cs" />
     <Compile Include="SearchUsersActivity.cs" />
@@ -72,6 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="GettingStarted.Xamarin" />
+    <None Include="packages.config" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <AndroidResource Include="Resources\layout-land\SingIn.axml" />

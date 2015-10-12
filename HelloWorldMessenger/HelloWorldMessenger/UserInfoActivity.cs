@@ -29,18 +29,11 @@ namespace HelloWorldMessenger
             addDialog.Click += AddDialog_Click;
 
 
-            userLogin = bundle.GetString("login");
+            userLogin = Intent.GetStringExtra("login");
         }
 
         private void AddDialog_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
-        }
-
-        private void RegisterButton_Click(object sender, EventArgs e)
-        {
-            
-
             if (HelpersAPI.Online)
             {
 
@@ -63,6 +56,7 @@ namespace HelloWorldMessenger
             //t.Show();
         }
 
+
         protected override void OnStart()
         {
             base.OnStart();
@@ -72,26 +66,24 @@ namespace HelloWorldMessenger
                 StartActivity(new Intent(this, typeof(SingInActivity)));
                 return;
             }
-            else
+
+
+            string param = "user/show?login=" + userLogin;
+            JsonValue userData = HelpersAPI.RequestToAPI(param);
+
+            if (userData.ContainsKey("login"))
             {
 
-                string param = "user/show?login" + userLogin; 
-                JsonValue userData = HelpersAPI.RequestToAPI(param);
 
-                if (userData.ContainsKey("login"))
-                {
+                EditText login = FindViewById<EditText>(Resource.Id.LoginField);
+                EditText name = FindViewById<EditText>(Resource.Id.NameField);
+                EditText info = FindViewById<EditText>(Resource.Id.InfoField);
 
-
-                    EditText login = FindViewById<EditText>(Resource.Id.LoginField);
-                    EditText name = FindViewById<EditText>(Resource.Id.NameField);
-                    EditText info = FindViewById<EditText>(Resource.Id.InfoField);
-
-                    login.Text = userData["login"];
-                    name.Text = userData["text"];
-                    info.Text = userData["info"];
+                login.Text = userData["login"];
+                name.Text = userData["name"];
+                info.Text = userData["info"];
 
 
-                }
             }
 
         }
