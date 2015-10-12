@@ -16,6 +16,9 @@ namespace HelloWorldMessenger
     [Activity(Label = "UserInfoActivity", Theme = "@android:style/Theme.Holo.Light.NoActionBar")]
     public class UserInfoActivity : Activity
     {
+
+        string userLogin = "";
+
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
@@ -24,6 +27,9 @@ namespace HelloWorldMessenger
 
             Button addDialog = FindViewById<Button>(Resource.Id.CreateDialogButton);
             addDialog.Click += AddDialog_Click;
+
+
+            userLogin = bundle.GetString("login");
         }
 
         private void AddDialog_Click(object sender, EventArgs e)
@@ -66,24 +72,27 @@ namespace HelloWorldMessenger
                 StartActivity(new Intent(this, typeof(SingInActivity)));
                 return;
             }
-            //else
-            //{
+            else
+            {
 
-            //    string param = "user/show?login" + login; //логин из предыдущего активити
-            //    JsonValue userData = HelpersAPI.RequestToAPI(param);
+                string param = "user/show?login" + userLogin; 
+                JsonValue userData = HelpersAPI.RequestToAPI(param);
 
-            //    if (userData.ContainsKey("login"))
-            //    {
+                if (userData.ContainsKey("login"))
+                {
 
 
-            //        EditText login = FindViewById<EditText>(Resource.Id.LoginField);
-            //        EditText name = FindViewById<EditText>(Resource.Id.NameField);
-            //        EditText info = FindViewById<EditText>(Resource.Id.InfoField);
+                    EditText login = FindViewById<EditText>(Resource.Id.LoginField);
+                    EditText name = FindViewById<EditText>(Resource.Id.NameField);
+                    EditText info = FindViewById<EditText>(Resource.Id.InfoField);
 
-            //        //назначаем пол€
+                    login.Text = userData["login"];
+                    name.Text = userData["text"];
+                    info.Text = userData["info"];
 
-            //    }
-            //}
+
+                }
+            }
 
         }
     }

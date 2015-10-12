@@ -24,7 +24,7 @@ namespace HelloWorldMessenger
         //static string server = "http://gsomgsom.icycoolhosting.com/HelloWorldAPI/";
         //static string CookieDomain = "gsomgsom.icycoolhosting.com";
 
-
+        static string myLogin = "";
         static bool online = true;
 
         public static bool Online
@@ -41,6 +41,15 @@ namespace HelloWorldMessenger
             get
             {
                 return server;
+            }
+
+        }
+
+        public static string MyLogin
+        {
+            get
+            {
+                return myLogin;
             }
 
         }
@@ -167,6 +176,7 @@ namespace HelloWorldMessenger
 
             if (json.ContainsKey("login"))
             {
+                myLogin = json["login"];
                 return true;
             }
             return false;
