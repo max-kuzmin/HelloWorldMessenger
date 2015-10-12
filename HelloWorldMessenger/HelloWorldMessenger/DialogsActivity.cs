@@ -125,13 +125,7 @@ namespace HelloWorldMessenger
             list = new List<DialogData>(items);
 
             //сортировка по времени
-            list.Sort((DialogData x, DialogData y) => {
-
-                if (x.Time > y.Time) return -1;
-                else if (x.Time < y.Time) return 1;
-                else return 0;
-
-            });
+            list.Sort(DialogData.Comparator);
         }
 
         public override DialogData this[int position]
@@ -197,5 +191,14 @@ namespace HelloWorldMessenger
             Id = id;
             Time = time;
         }
-    }
+
+
+        public static int Comparator(DialogData x, DialogData y)  {
+
+                if (x.Time > y.Time) return -1;
+                else if (x.Time<y.Time) return 1;
+                else return 0;
+
+            }
+}
 }

@@ -38,38 +38,56 @@ namespace HelloWorldMessenger
         {
             base.OnStart();
 
-
-            if (!HelpersAPI.AuthCheckAPI())
+            //проверка на онлайн и авторизацию
+            if (!HelpersAPI.AuthCheckAPI() && HelpersAPI.Online)
             {
                 StartActivity(new Intent(this, typeof(SingInActivity)));
                 return;
             }
 
-
+            //обработчики
             Button send = FindViewById<Button>(Resource.Id.SendMessageButton);
             send.Click += Send_Click;
 
-
-
-
-
-
-            //вывод сообщений
             ListView messages = FindViewById<ListView>(Resource.Id.MessagesList);
             messages.ItemClick += Messages_ItemClick;
 
-            List<MessageData> items = new List<MessageData>();
-            string param = "message/show?dialog_id=" + dialog_id+"&time=0";
-            JsonValue jsonItems = HelpersAPI.RequestToAPI(param);
 
-            if (jsonItems.JsonType == JsonType.Array || !jsonItems.ContainsKey("status"))
+            //получаем из БД сообщения
+            long lastTime = 0;
+            List<MessageData> items = new List<MessageData>();
+            List<MessageData> messagesFromDB = HelpersDB.GetMessages(dialog_id);
+            if (messagesFromDB.Count > 0)
             {
-                foreach (JsonValue item in jsonItems)
+                lastTime = messagesFromDB[messagesFromDB.Count - 1].Time;
+                items.AddRange(messagesFromDB);
+            }
+
+
+            if (HelpersAPI.Online)
+            {
+                
+                //запрос на сервер за новыми сообщениями
+                List<MessageData> itemsFromAPI = new List<MessageData>();
+
+                string param = "message/show?dialog_id=" + dialog_id + "&time=" + lastTime;
+                JsonValue jsonItems = HelpersAPI.RequestToAPI(param);
+
+                if (jsonItems.JsonType == JsonType.Array || !jsonItems.ContainsKey("status"))
                 {
-                    items.Add(new MessageData(item["message_id"], item["text"], item["login"], item["time"]));
+                    foreach (JsonValue item in jsonItems)
+                    {
+                        itemsFromAPI.Add(new MessageData(item["message_id"], item["text"], item["login"], item["time"]));
+                    }
+
                 }
 
+                //добавляем сообщения с сервера в БД
+                HelpersDB.PutMessages(itemsFromAPI, dialog_id);
+                items.AddRange(itemsFromAPI);
             }
+
+            //объединяем списки и выводим
             adapter = new MessagesAdapter(this, items);
             messages.Adapter = adapter;
             messages.SetSelection(messages.Adapter.Count - 1);
@@ -79,28 +97,37 @@ namespace HelloWorldMessenger
 
         private void Send_Click(object sender, EventArgs e)
         {
-
-            EditText messageText = FindViewById<EditText>(Resource.Id.MessageField);
-            string param = "message/add?dialog_id=" + dialog_id + "&text=" + messageText.Text;
-            messageText.Text = "";
-            JsonValue result = HelpersAPI.RequestToAPI(param);
-            if (result.ContainsKey("status") && result["status"] == "true")
+            if (HelpersAPI.Online)
             {
-                
-                List<MessageData> items = new List<MessageData>();
-                long lastTime = ((MessageData)adapter.GetItem(adapter.Count - 1)).Time;
-                string param2 = "message/show?dialog_id=" + dialog_id + "&time="+ lastTime;
-                JsonValue jsonItems = HelpersAPI.RequestToAPI(param2);
-                if (jsonItems.JsonType == JsonType.Array || !jsonItems.ContainsKey("status"))
-                {
-                    foreach (JsonValue item in jsonItems)
-                    {
-                        items.Add(new MessageData(item["message_id"], item["text"], item["login"], item["time"]));
-                    }
-                    adapter.AddItems(items);
+                //постим сообщение на сервер
+                EditText messageText = FindViewById<EditText>(Resource.Id.MessageField);
+                string param = "message/add?dialog_id=" + dialog_id + "&text=" + messageText.Text;
+                messageText.Text = "";
+                JsonValue result = HelpersAPI.RequestToAPI(param);
 
-                    ListView messages = FindViewById<ListView>(Resource.Id.MessagesList);
-                    messages.SetSelection(messages.Adapter.Count - 1);
+                //получаем новые сообщения с сервера
+                if (result.ContainsKey("status") && result["status"] == "true")
+                {
+
+                    List<MessageData> items = new List<MessageData>();
+                    long lastTime = ((MessageData)adapter.GetItem(adapter.Count - 1)).Time;
+                    string param2 = "message/show?dialog_id=" + dialog_id + "&time=" + lastTime;
+                    JsonValue jsonItems = HelpersAPI.RequestToAPI(param2);
+                    if (jsonItems.JsonType == JsonType.Array || !jsonItems.ContainsKey("status"))
+                    {
+                        foreach (JsonValue item in jsonItems)
+                        {
+                            items.Add(new MessageData(item["message_id"], item["text"], item["login"], item["time"]));
+                        }
+                        //добавляем их в активити и в БД
+                        HelpersDB.PutMessages(items, dialog_id);
+                        adapter.AddItems(items);
+
+                        
+                        //прокрутка вниз
+                        ListView messages = FindViewById<ListView>(Resource.Id.MessagesList);
+                        messages.SetSelection(messages.Adapter.Count - 1);
+                    }
                 }
             }
             
@@ -109,6 +136,7 @@ namespace HelloWorldMessenger
         private void Messages_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
             //клик на сообщении
+            throw new NotImplementedException();
         }
     }
 
@@ -124,7 +152,7 @@ namespace HelloWorldMessenger
 
         public void AddItems(List<MessageData> items)
         {
-            items.Sort(Comparator);
+            items.Sort(MessageData.Comparator);
             list.AddRange(items);
             this.NotifyDataSetChanged();
 
@@ -136,16 +164,9 @@ namespace HelloWorldMessenger
             ctx = context;
             list = new List<MessageData>(items);
 
-            //сортировка по времени
-            list.Sort(Comparator);
+            list.Sort(MessageData.Comparator);
         }
 
-        private static int Comparator(MessageData x, MessageData y)
-        {
-            if (x.Time > y.Time) return 1;
-            else if (x.Time < y.Time) return -1;
-            else return 0;
-        }
 
         public override MessageData this[int position]
         {
@@ -194,7 +215,6 @@ namespace HelloWorldMessenger
             }
 
 
-
             return view;
         }
 
@@ -214,6 +234,13 @@ namespace HelloWorldMessenger
             Login = login;
             Id = id;
             Time = time;
+        }
+
+        public static int Comparator(MessageData x, MessageData y)
+        {
+            if (x.Time > y.Time) return 1;
+            else if (x.Time < y.Time) return -1;
+            else return 0;
         }
     }
 }

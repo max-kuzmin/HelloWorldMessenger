@@ -62,7 +62,7 @@
   <ItemGroup>
     <Compile Include="DialogsActivity.cs" />
     <Compile Include="HelpersAPI.cs" />
-    <Compile Include="LocalDB.cs" />
+    <Compile Include="HelpersDB.cs" />
     <Compile Include="MessagesActivity.cs" />
     <Compile Include="SQLite.cs" />
     <Compile Include="SQLiteAsync.cs" />

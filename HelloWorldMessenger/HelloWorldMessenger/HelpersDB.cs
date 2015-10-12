@@ -17,11 +17,12 @@ namespace HelloWorldMessenger
     [Table("Messages")]
     public class MessagesTable
     {
-        [PrimaryKey]
+        [PrimaryKey, AutoIncrement]
         public long Id { get; set; }
 
+        public long Message_ID { get; set; }
         public string Login { get; set; }
-        public int Dialog_ID { get; set; }
+        public long Dialog_ID { get; set; }
         public long Time { get; set; }
         public string Text { get; set; }
     }
@@ -29,12 +30,14 @@ namespace HelloWorldMessenger
     [Table("Dialogs")]
     public class DialogsTable
     {
-        [PrimaryKey]
+        [PrimaryKey, AutoIncrement]
         public long Id { get; set; }
 
+        public long Dialog_ID { get; set; }
         public string Name { get; set; }
         public long Time { get; set; }
         public string Members { get; set; }
+        public string Login { get; set; }
     }
 
 
@@ -52,7 +55,7 @@ namespace HelloWorldMessenger
             db.CreateTable<DialogsTable>();
         }
 
-        public static List<MessageData> GetMessages(int dialog_id)
+        public static List<MessageData> GetMessages(long dialog_id)
         {
             if (db == null) ConnectToDB();
             TableQuery<MessagesTable> messages = db.Table<MessagesTable>().Where((m) => m.Dialog_ID == dialog_id);
@@ -61,7 +64,7 @@ namespace HelloWorldMessenger
 
             foreach (MessagesTable item in messages)
             {
-                result.Add(new MessageData(item.Id, item.Text, item.Login, item.Time));
+                result.Add(new MessageData(item.Message_ID, item.Text, item.Login, item.Time));
 
             }
             return result;
@@ -69,41 +72,41 @@ namespace HelloWorldMessenger
 
 
 
-        public static void PutMessages(List<MessageData> messages, int dialog_id)
+        public static void PutMessages(List<MessageData> messages, long dialog_id)
         {
             if (db == null) ConnectToDB();
 
             foreach (MessageData item in messages)
             {
-                db.Insert(new MessagesTable() { Login = item.Login, Dialog_ID = dialog_id, Id = item.Id, Text = item.Text, Time = item.Time });
+                db.Insert(new MessagesTable() { Login = item.Login, Dialog_ID = dialog_id, Message_ID = item.Id, Text = item.Text, Time = item.Time });
 
             }
         }
 
 
 
-        public static void PutDialogs(List<DialogData> dialogs)
+        public static void PutDialogs(List<DialogData> dialogs, string login)
         {
             if (db == null) ConnectToDB();
 
             foreach (DialogData item in dialogs)
             {
-                db.Insert(new DialogsTable() { Id = item.Id, Name = item.Name, Time = item.Time});
+                db.Insert(new DialogsTable() { Dialog_ID = item.Id, Name = item.Name, Time = item.Time, Members = item.Members, Login = login});
 
             }
         }
 
 
-        public static List<DialogData> GetDialogs()
+        public static List<DialogData> GetDialogs(string login)
         {
             if (db == null) ConnectToDB();
-            TableQuery<DialogsTable> dialogs = db.Table<DialogsTable>();
+            TableQuery<DialogsTable> dialogs = db.Table<DialogsTable>().Where(m => m.Login == login);
 
             List<DialogData> result = new List<DialogData>();
 
             foreach (DialogsTable item in dialogs)
             {
-                result.Add(new DialogData(item.Id, item.Name, item.Members, item.Time));
+                result.Add(new DialogData(item.Dialog_ID, item.Name, item.Members, item.Time));
 
             }
             return result;
@@ -114,7 +117,7 @@ namespace HelloWorldMessenger
         {
             if (db == null) ConnectToDB();
 
-            DialogsTable dialog = db.Table<DialogsTable>().First((m) => m.Id == dialog_id);
+            DialogsTable dialog = db.Table<DialogsTable>().First((m) => m.Dialog_ID == dialog_id);
             dialog.Time = time;
             db.Update(dialog);
         }
@@ -124,7 +127,7 @@ namespace HelloWorldMessenger
         {
             if (db == null) ConnectToDB();
 
-            DialogsTable dialog = db.Table<DialogsTable>().First((m) => m.Id == dialog_id);
+            DialogsTable dialog = db.Table<DialogsTable>().First((m) => m.Dialog_ID == dialog_id);
             db.Delete(dialog);
         }
     }
