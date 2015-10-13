@@ -37,12 +37,10 @@ namespace HelloWorldMessenger
         {
             MenuInflater.Inflate(Resource.Layout.DialogsMenu, menu);
 
-            //IMenuItem item = menu.FindItem(Resource.Id.AddDialogButton);
-            //item.SetOnMenuItemClickListener(new CreateDialogClick(this, item.Handle));
-
             return base.OnCreateOptionsMenu(menu);
         }
 
+        //обработка клика на пункте меню сверху
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
 
@@ -62,16 +60,21 @@ namespace HelloWorldMessenger
         {
             base.OnStart();
 
+            ListView dialogs = FindViewById<ListView>(Resource.Id.DialogsList);
+            dialogs.ItemClick += Dialogs_ItemClick;
 
-            if (HelpersAPI.AuthCheckAPI())
+            List<DialogData> items = new List<DialogData>();
+
+            if (!HelpersAPI.AuthCheckAPI() || HelpersAPI.MyLogin == "")
             {
+                //если не залогинился - возврат к авторизации
+                StartActivity(new Intent(this, typeof(SingInActivity)));
+                return;
+            }
 
-
-                ListView dialogs = FindViewById<ListView>(Resource.Id.DialogsList);
-                dialogs.ItemClick += Dialogs_ItemClick;
-
-                List<DialogData> items = new List<DialogData>();
-
+            if (HelpersAPI.Online)
+            {
+                //получение диалогов из апи
                 JsonValue jsonItems = HelpersAPI.RequestToAPI("dialog/show");
 
                 if (jsonItems.JsonType == JsonType.Array || !jsonItems.ContainsKey("status"))
@@ -81,17 +84,26 @@ namespace HelloWorldMessenger
                         items.Add(new DialogData(item["dialog_id"], item["name"], item["users"], item["time"]));
                     }
 
+                    //очистка списка диалогов и добавление диалогов из апи
+                    HelpersDB.DeleteDialogs(HelpersAPI.MyLogin);
+                    HelpersDB.PutDialogs(items, HelpersAPI.MyLogin);
+
                 }
-
-                
-                adapter = new DialogsAdapter(this, items);
-                dialogs.Adapter = adapter;
-
 
 
             }
+            else
+            {
+                //получение диалогов из базы
+                items.AddRange(HelpersDB.GetDialogs(HelpersAPI.MyLogin));
+            }
+            
+
+            adapter = new DialogsAdapter(this, items);
+            dialogs.Adapter = adapter;
         }
 
+        //обработка клика на диалоге
         private void Dialogs_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
 
@@ -102,21 +114,14 @@ namespace HelloWorldMessenger
         }
     }
 
+
+
     public class DialogsAdapter : BaseAdapter<DialogData>
     {
 
         Context ctx;
         List<DialogData> list;
 
-
-
-        public void AddItems(DialogData[] item)
-        {
-            //add items to show
-
-
-            throw new NotImplementedException();
-        }
 
 
         public DialogsAdapter(Context context, IEnumerable<DialogData> items)
@@ -162,6 +167,8 @@ namespace HelloWorldMessenger
                 view = View.Inflate(ctx, Resource.Layout.DialogListItem, null);
             }
 
+
+            //задаем данные в лэйауте
             view.FindViewById<TextView>(Resource.Id.DialogNameListItem).Text = list.ElementAt(position).Name;
             view.FindViewById<TextView>(Resource.Id.DialogMembersListItem).Text = list.ElementAt(position).Members;
 

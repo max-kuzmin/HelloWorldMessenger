@@ -22,7 +22,7 @@ namespace HelloWorldMessenger
 
             SetContentView(Resource.Layout.SingIn);
 
-
+            //обработчики
             Button singInButton = FindViewById<Button>(Resource.Id.SingInButton);
             singInButton.Click += SingInButton_Click;
 
@@ -34,8 +34,10 @@ namespace HelloWorldMessenger
 
         private void RegisterButton_Click(object sender, EventArgs e)
         {
-            StartActivity(new Intent(this, typeof(RegisterActivity)));
+            if (HelpersAPI.Online)
+                StartActivity(new Intent(this, typeof(RegisterActivity)));
         }
+
 
         protected override void OnStart()
         {
@@ -47,6 +49,7 @@ namespace HelloWorldMessenger
                 return;
             }
 
+            FindViewById<EditText>(Resource.Id.LoginField).Text = HelpersAPI.MyLogin;
 
         }
 
@@ -55,13 +58,21 @@ namespace HelloWorldMessenger
             string login = FindViewById<EditText>(Resource.Id.LoginField).Text;
             string pass = FindViewById<EditText>(Resource.Id.PassField).Text;
 
-            if (HelpersAPI.SinginToAPI(login, pass))
+            //логин, если онлайн и верный пароль
+            if (HelpersAPI.Online && HelpersAPI.SinginToAPI(login, pass))
+            {
+                StartActivity(new Intent(this, typeof(DialogsActivity)));
+                return;
+            }
+            //логин, если оффлайн и логин совпадает с сохраненным
+            else if (!HelpersAPI.Online && login == HelpersAPI.MyLogin)
             {
                 StartActivity(new Intent(this, typeof(DialogsActivity)));
                 return;
             }
 
 
+            //если неверный логин и пароль
             Toast t = Toast.MakeText(this, Resource.String.LoginPassError, ToastLength.Long);
             t.SetGravity(GravityFlags.Center,0,0);
             t.Show();

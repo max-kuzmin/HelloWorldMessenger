@@ -46,7 +46,7 @@ namespace HelloWorldMessenger
 
         static SQLiteConnection db = null;
 
-
+        //подключниение к БД
         static void ConnectToDB()
         {
             string dbPath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "HelloWorldDB.db3");
@@ -55,6 +55,7 @@ namespace HelloWorldMessenger
             db.CreateTable<DialogsTable>();
         }
 
+        //получить сообщения из БД в виде списка
         public static List<MessageData> GetMessages(long dialog_id)
         {
             if (db == null) ConnectToDB();
@@ -65,13 +66,12 @@ namespace HelloWorldMessenger
             foreach (MessagesTable item in messages)
             {
                 result.Add(new MessageData(item.Message_ID, item.Text, item.Login, item.Time));
-
             }
             return result;
         }
 
 
-
+        //поместить сообщения в БД
         public static void PutMessages(List<MessageData> messages, long dialog_id)
         {
             if (db == null) ConnectToDB();
@@ -84,7 +84,7 @@ namespace HelloWorldMessenger
         }
 
 
-
+        //поместить диалоги в БД
         public static void PutDialogs(List<DialogData> dialogs, string login)
         {
             if (db == null) ConnectToDB();
@@ -96,7 +96,7 @@ namespace HelloWorldMessenger
             }
         }
 
-
+        //получить диалоги из БД по логину
         public static List<DialogData> GetDialogs(string login)
         {
             if (db == null) ConnectToDB();
@@ -112,7 +112,7 @@ namespace HelloWorldMessenger
             return result;
         }
 
-
+        //обновить время диалога в БД
         public static void UpdateDialogTime(long dialog_id, long time)
         {
             if (db == null) ConnectToDB();
@@ -123,12 +123,16 @@ namespace HelloWorldMessenger
         }
 
 
-        public static void DeleteDialog(long dialog_id)
+        //удалить диалог из БД
+        public static void DeleteDialogs(string login)
         {
             if (db == null) ConnectToDB();
 
-            DialogsTable dialog = db.Table<DialogsTable>().First((m) => m.Dialog_ID == dialog_id);
-            db.Delete(dialog);
+            TableQuery<DialogsTable> dialogs = db.Table<DialogsTable>().Where((m) => m.Login == login);
+            foreach (DialogsTable item in dialogs)
+            {
+                db.Delete(item);
+            }
         }
     }
 }

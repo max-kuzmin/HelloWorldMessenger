@@ -13,7 +13,7 @@ using System.Json;
 
 namespace HelloWorldMessenger
 {
-    [Activity(Label = "UserInfoActivity", Theme = "@android:style/Theme.Holo.Light.NoActionBar")]
+    [Activity(Theme = "@android:style/Theme.Holo.Light.NoActionBar")]
     public class UserInfoActivity : Activity
     {
 
@@ -28,32 +28,23 @@ namespace HelloWorldMessenger
             Button addDialog = FindViewById<Button>(Resource.Id.CreateDialogButton);
             addDialog.Click += AddDialog_Click;
 
-
             userLogin = Intent.GetStringExtra("login");
         }
 
+        //добавление диалогов
         private void AddDialog_Click(object sender, EventArgs e)
         {
             if (HelpersAPI.Online)
             {
-
                 string login = FindViewById<EditText>(Resource.Id.LoginField).Text;
-
                 string param = "dialog/add?login=" + login;
-
                 JsonValue result = HelpersAPI.RequestToAPI(param);
 
                 if (result.ContainsKey("status") && result["status"] == "true")
                 {
-
                     StartActivity(new Intent(this, typeof(DialogsActivity)));
-
                 }
             }
-
-            //Toast t = Toast.MakeText(this, Resource.String.RegError, ToastLength.Long);
-            //t.SetGravity(GravityFlags.Center, 0, 0);
-            //t.Show();
         }
 
 
@@ -68,24 +59,25 @@ namespace HelloWorldMessenger
             }
 
 
-            string param = "user/show?login=" + userLogin;
-            JsonValue userData = HelpersAPI.RequestToAPI(param);
-
-            if (userData.ContainsKey("login"))
+            //вывод инфы из апи
+            if (HelpersAPI.Online)
             {
+                string param = "user/show?login=" + userLogin;
+                JsonValue userData = HelpersAPI.RequestToAPI(param);
 
+                if (userData.ContainsKey("login"))
+                {
 
-                EditText login = FindViewById<EditText>(Resource.Id.LoginField);
-                EditText name = FindViewById<EditText>(Resource.Id.NameField);
-                EditText info = FindViewById<EditText>(Resource.Id.InfoField);
+                    EditText login = FindViewById<EditText>(Resource.Id.LoginField);
+                    EditText name = FindViewById<EditText>(Resource.Id.NameField);
+                    EditText info = FindViewById<EditText>(Resource.Id.InfoField);
 
-                login.Text = userData["login"];
-                name.Text = userData["name"];
-                info.Text = userData["info"];
+                    login.Text = userData["login"];
+                    name.Text = userData["name"];
+                    info.Text = userData["info"];
 
-
+                }
             }
-
         }
     }
 }

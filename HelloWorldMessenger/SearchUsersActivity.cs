@@ -15,7 +15,7 @@ using System.Security.Cryptography;
 
 namespace HelloWorldMessenger
 {
-    [Activity(Label = "SearchUsersActivity", Theme = "@android:style/Theme.Holo.Light.NoActionBar")]
+    [Activity(Theme = "@android:style/Theme.Holo.Light.NoActionBar")]
     public class SearchUsersActivity : Activity
     {
 
@@ -27,13 +27,12 @@ namespace HelloWorldMessenger
 
             SetContentView(Resource.Layout.SearchUsers);
 
-            // Create your application here
-
             Button search = FindViewById<Button>(Resource.Id.SearchButton);
             search.Click += Search_Click;
 
         }
 
+        //выводим список найденных пользователей
         private void Search_Click(object sender, EventArgs e)
         {
             if (HelpersAPI.Online)
@@ -45,31 +44,35 @@ namespace HelloWorldMessenger
 
                 string query = FindViewById<EditText>(Resource.Id.SearchField).Text;
 
-                JsonValue jsonItems = HelpersAPI.RequestToAPI("user/search?query=" + query);
-
-                if (jsonItems.JsonType == JsonType.Array || !jsonItems.ContainsKey("status"))
+                if (query.Length >0)
                 {
-                    foreach (JsonValue item in jsonItems)
+                    JsonValue jsonItems = HelpersAPI.RequestToAPI("user/search?query=" + query);
+
+                    if (jsonItems.JsonType == JsonType.Array || !jsonItems.ContainsKey("status"))
                     {
-                        items.Add(new User(item["name"], item["login"], item["info"], null));
+                        foreach (JsonValue item in jsonItems)
+                        {
+                            items.Add(new User(item["name"], item["login"], item["info"]));
+                        }
+
                     }
 
+                    adapter = new UsersAdapter(this, items);
+                    usersList.Adapter = adapter; 
                 }
-
-                adapter = new UsersAdapter(this, items);
-                usersList.Adapter = adapter;
             }
         }
 
         private void UsersList_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
             //переход на страницу пользователя
-
-
-            string login = ((User)adapter.GetItem(e.Position)).Login;
-            Intent intent = new Intent(this, typeof(UserInfoActivity));
-            intent.PutExtra("login", login);
-            StartActivity(intent);
+            if (HelpersAPI.Online)
+            {
+                string login = ((User)adapter.GetItem(e.Position)).Login;
+                Intent intent = new Intent(this, typeof(UserInfoActivity));
+                intent.PutExtra("login", login);
+                StartActivity(intent);
+            }
         }
 
         protected override void OnStart()
@@ -156,14 +159,12 @@ namespace HelloWorldMessenger
         public string Name = "";
         public string Login = "";
         public string Info = "";
-        public byte[] Avatar = null;
 
-        public User(string name, string login, string info, byte[] avatar)
+        public User(string name, string login, string info)
         {
             Name = name;
             Login = login;
             Info = info;
-            Avatar = avatar;
         }
     }
 }
