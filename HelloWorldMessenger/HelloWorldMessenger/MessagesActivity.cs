@@ -28,7 +28,7 @@ namespace HelloWorldMessenger
             base.OnCreate(bundle);
 
             SetContentView(Resource.Layout.Messages);
-            this.SetTitle(Resource.String.Messages);
+            SetTitle(Resource.String.Messages);
 
             dialog_id = Intent.GetLongExtra("dialog_id", 0);
         }
@@ -39,7 +39,7 @@ namespace HelloWorldMessenger
             base.OnStart();
 
             //проверка на онлайн и авторизацию
-            if (!HelpersAPI.AuthCheckAPI() && HelpersAPI.Online)
+            if (!HelpersAPI.AuthCheckAPI() ||  HelpersAPI.MyLogin=="")
             {
                 StartActivity(new Intent(this, typeof(SingInActivity)));
                 return;
@@ -196,18 +196,22 @@ namespace HelloWorldMessenger
 
         public override View GetView(int position, View convertView, ViewGroup parent)
         {
+            //извлекаем лэйаут
             View view = convertView;
             if (view == null)
             {
                 view = View.Inflate(ctx, Resource.Layout.MessageListItem, null);
             }
 
+
+            //присваиваем элементам значения
             view.FindViewById<TextView>(Resource.Id.MessageTextListItem).Text = list.ElementAt(position).Text;
 
             DateTime date = HelpersAPI.FromUnixTime(list.ElementAt(position).Time);
 
             view.FindViewById<TextView>(Resource.Id.MessageTimeListItem).Text = date.ToShortDateString() + " " + date.ToLongTimeString();
 
+            //настраиваем вид
             if (HelpersAPI.MyLogin == list.ElementAt(position).Login)
             {
                 view.FindViewById<TextView>(Resource.Id.MessageTextListItem).Gravity = GravityFlags.Right;

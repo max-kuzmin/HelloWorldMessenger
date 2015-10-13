@@ -19,8 +19,8 @@ namespace HelloWorldMessenger
     public class HelpersAPI
     {
 
-        //doto сохранение диалогов в базе, открытие списка диалогов из базы без интренета, проверка авторизации без интернета!!!!!!!!!
-        //разлогивание
+        //doto закрытие старых активити, картинки аватарки, проверка отсутвия инета
+        //разлогивание, удаление диалога, изменение имени диалога, изменение своих данных, красивое время
 
         static string server = "http://169.254.80.80/HelloWorldAPI/";
         static string CookieDomain = "169.254.80.80";
@@ -69,7 +69,7 @@ namespace HelloWorldMessenger
                 NetworkInfo netInfo = conMgr.ActiveNetworkInfo;
                 if (netInfo == null || !netInfo.IsConnected) throw new Exception();
 
-                //запрос
+                //запрос к апи
                 System.Uri address = new System.Uri(new System.Uri(Server), param);
                 HttpWebRequest req = new HttpWebRequest(address);
                 req.CookieContainer = GetCookieFromSetting();
@@ -88,8 +88,13 @@ namespace HelloWorldMessenger
             }
             catch 
             {
+                //если ошибка запроса - нет инета
                 json = JsonValue.Parse("{\"status\":\"offline\"}");
                 online = false;
+
+                ISharedPreferences prefs = Application.Context.GetSharedPreferences("Setting", FileCreationMode.Private);
+                myLogin = prefs.GetString("login", "");
+
                 Toast.MakeText(Application.Context, Resource.String.NoInternet, ToastLength.Long).Show();
             }
 
@@ -99,7 +104,7 @@ namespace HelloWorldMessenger
 
 
 
-
+        //получаем куки из хранилища
         public static CookieContainer GetCookieFromSetting()
         {
             ISharedPreferences prefs = Application.Context.GetSharedPreferences("Setting", FileCreationMode.Private);
@@ -119,6 +124,7 @@ namespace HelloWorldMessenger
         }
 
 
+        //преобразование времени
         public static DateTime FromUnixTime(long seconds)
         {
             DateTime date = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
@@ -129,7 +135,7 @@ namespace HelloWorldMessenger
 
 
 
-
+        //авторизация в апи
         public static bool SinginToAPI(string login, string pass)
         {
 
@@ -153,7 +159,7 @@ namespace HelloWorldMessenger
                     res.Close();
 
 
-
+                    //сохранение куки в храналище
                     if (json.ContainsKey("status") && json["status"] == "true")
                     {
 
@@ -163,6 +169,9 @@ namespace HelloWorldMessenger
                         string cookie = res.Headers.Get("Set-Cookie").Split('=', ';')[1];
 
                         prefEditor.PutString("PHPSESSID", cookie);
+
+                        //сохраняем логин
+                        prefEditor.PutString("login", myLogin);
                         prefEditor.Commit();
 
                         return true;
@@ -174,6 +183,7 @@ namespace HelloWorldMessenger
             }
             catch
             {
+                //если ошибка - нет интернета
                 online = false;
                 Toast.MakeText(Application.Context, Resource.String.NoInternet, ToastLength.Long).Show();
             }
@@ -182,6 +192,8 @@ namespace HelloWorldMessenger
         }
 
 
+
+        //проверка на авторизацию в апи
         public static bool AuthCheckAPI()
         {
             JsonValue json = RequestToAPI("login/check");
