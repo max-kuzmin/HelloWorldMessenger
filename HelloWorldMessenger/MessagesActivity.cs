@@ -34,12 +34,35 @@ namespace HelloWorldMessenger
         }
 
 
+
+
+        public override bool OnCreateOptionsMenu(IMenu menu)
+        {
+            MenuInflater.Inflate(Resource.Layout.MessagesMenu, menu);
+
+            return base.OnCreateOptionsMenu(menu);
+        }
+
+        //обработка клика на пункте меню сверху
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            if (item.ItemId == Resource.Id.LogOutMenuButton)
+            {
+                HelpersAPI.LogOut();
+                StartActivity(new Intent(this, typeof(SingInActivity)));
+            }
+
+            return base.OnOptionsItemSelected(item);
+        }
+
+
+
         protected override void OnStart()
         {
             base.OnStart();
 
             //проверка на онлайн и авторизацию
-            if (!HelpersAPI.AuthCheckAPI() ||  HelpersAPI.MyLogin=="")
+            if (!HelpersAPI.AuthCheckAPI() &&  HelpersAPI.MyLogin=="")
             {
                 StartActivity(new Intent(this, typeof(SingInActivity)));
                 return;
@@ -110,7 +133,8 @@ namespace HelloWorldMessenger
                 {
 
                     List<MessageData> items = new List<MessageData>();
-                    long lastTime = ((MessageData)adapter.GetItem(adapter.Count - 1)).Time;
+                    long lastTime = 0;
+                    if (adapter.Count>0) lastTime = ((MessageData)adapter.GetItem(adapter.Count - 1)).Time;
                     string param2 = "message/show?dialog_id=" + dialog_id + "&time=" + lastTime;
                     JsonValue jsonItems = HelpersAPI.RequestToAPI(param2);
                     if (jsonItems.JsonType == JsonType.Array || !jsonItems.ContainsKey("status"))

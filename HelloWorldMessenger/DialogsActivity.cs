@@ -43,7 +43,6 @@ namespace HelloWorldMessenger
         //обработка клика на пункте меню сверху
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
-
             if (item.ItemId == Resource.Id.AddDialogButton)
             {
                 StartActivity(new Intent(this, typeof(SearchUsersActivity)));
@@ -65,7 +64,7 @@ namespace HelloWorldMessenger
 
             List<DialogData> items = new List<DialogData>();
 
-            if (!HelpersAPI.AuthCheckAPI() || HelpersAPI.MyLogin == "")
+            if (!HelpersAPI.AuthCheckAPI() && HelpersAPI.MyLogin == "")
             {
                 //если не залогинился - возврат к авторизации
                 StartActivity(new Intent(this, typeof(SingInActivity)));
@@ -109,6 +108,7 @@ namespace HelloWorldMessenger
 
             long dialog_id = ((DialogData)adapter.GetItem(e.Position)).Id;
             Intent intent = new Intent(this, typeof(MessagesActivity));
+            intent.AddFlags(ActivityFlags.NoHistory);
             intent.PutExtra("dialog_id", dialog_id);
             StartActivity(intent);
         }

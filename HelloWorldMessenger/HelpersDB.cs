@@ -18,7 +18,7 @@ namespace HelloWorldMessenger
     public class MessagesTable
     {
         [PrimaryKey, AutoIncrement]
-        public long Id { get; set; }
+        public int Id { get; set; }
 
         public long Message_ID { get; set; }
         public string Login { get; set; }
@@ -31,7 +31,7 @@ namespace HelloWorldMessenger
     public class DialogsTable
     {
         [PrimaryKey, AutoIncrement]
-        public long Id { get; set; }
+        public int Id { get; set; }
 
         public long Dialog_ID { get; set; }
         public string Name { get; set; }
