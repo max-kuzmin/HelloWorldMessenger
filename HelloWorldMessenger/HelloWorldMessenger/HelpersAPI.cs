@@ -19,7 +19,7 @@ namespace HelloWorldMessenger
     public class HelpersAPI
     {
 
-        //doto закрытие старых активити, картинки аватарки, проверка отсутвия инета
+        //doto картинки аватарки, проверка отсутвия инета
         //разлогивание, удаление диалога, изменение имени диалога, изменение своих данных, красивое время
 
         static string server = "http://169.254.80.80/HelloWorldAPI/";
@@ -67,7 +67,7 @@ namespace HelloWorldMessenger
                 //проверка на подключение к сети /////////////////////////////////
                 ConnectivityManager conMgr = (ConnectivityManager)Application.Context.GetSystemService(Context.ConnectivityService);
                 NetworkInfo netInfo = conMgr.ActiveNetworkInfo;
-                if (netInfo == null || !netInfo.IsConnected) throw new Exception();
+                //if (netInfo == null || !netInfo.IsConnected) throw new Exception();
 
                 //запрос к апи
                 System.Uri address = new System.Uri(new System.Uri(Server), param);
@@ -93,7 +93,6 @@ namespace HelloWorldMessenger
                 online = false;
 
                 ISharedPreferences prefs = Application.Context.GetSharedPreferences("Setting", FileCreationMode.Private);
-                myLogin = prefs.GetString("login", "");
 
                 Toast.MakeText(Application.Context, Resource.String.NoInternet, ToastLength.Long).Show();
             }
@@ -108,9 +107,7 @@ namespace HelloWorldMessenger
         public static CookieContainer GetCookieFromSetting()
         {
             ISharedPreferences prefs = Application.Context.GetSharedPreferences("Setting", FileCreationMode.Private);
-
             string cookie = prefs.GetString("PHPSESSID", "");
-
             CookieContainer container = new CookieContainer();
 
             if (cookie != "")
@@ -158,6 +155,7 @@ namespace HelloWorldMessenger
                     reader.Close();
                     res.Close();
 
+                    online = true;
 
                     //сохранение куки в храналище
                     if (json.ContainsKey("status") && json["status"] == "true")
@@ -169,9 +167,6 @@ namespace HelloWorldMessenger
                         string cookie = res.Headers.Get("Set-Cookie").Split('=', ';')[1];
 
                         prefEditor.PutString("PHPSESSID", cookie);
-
-                        //сохраняем логин
-                        prefEditor.PutString("login", myLogin);
                         prefEditor.Commit();
 
                         return true;
@@ -179,7 +174,7 @@ namespace HelloWorldMessenger
 
                 }
 
-                online = true;
+                
             }
             catch
             {
@@ -193,16 +188,32 @@ namespace HelloWorldMessenger
 
 
 
+        public static void LogOut()
+        {
+            ISharedPreferences prefs = Application.Context.GetSharedPreferences("Setting", FileCreationMode.Private);
+            ISharedPreferencesEditor prefEditor = prefs.Edit();
+            prefEditor.Clear();
+            prefEditor.Commit();
+        }
+
         //проверка на авторизацию в апи
         public static bool AuthCheckAPI()
         {
             JsonValue json = RequestToAPI("login/check");
 
+            ISharedPreferences prefs = Application.Context.GetSharedPreferences("Setting", FileCreationMode.Private);
+            ISharedPreferencesEditor prefEditor = prefs.Edit();
+
             if (json.ContainsKey("login"))
             {
                 myLogin = json["login"];
+                //сохраняем логин
+                prefEditor.PutString("login", myLogin);
+                prefEditor.Commit();
                 return true;
             }
+
+            myLogin = prefs.GetString("login", "");
             return false;
         }
     }

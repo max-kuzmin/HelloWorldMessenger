@@ -59,7 +59,7 @@ namespace HelloWorldMessenger
             string pass = FindViewById<EditText>(Resource.Id.PassField).Text;
 
             //логин, если онлайн и верный пароль
-            if (HelpersAPI.Online && HelpersAPI.SinginToAPI(login, pass))
+            if (HelpersAPI.SinginToAPI(login, pass) && HelpersAPI.Online)
             {
                 StartActivity(new Intent(this, typeof(DialogsActivity)));
                 return;
