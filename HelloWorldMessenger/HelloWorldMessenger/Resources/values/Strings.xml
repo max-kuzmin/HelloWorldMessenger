@@ -23,6 +23,11 @@
   <string name="Messages">Messages</string>
   <string name="ShowMenu">Show menu</string>
   <string name="LogOut">Log out</string>
+  <string name="RenameDialog">Rename dialog</string>
+  <string name="DeleteDialog">Delete dialog</string>
+  <string name="Ok">OK</string>
+  <string name="EnterName">Enter new name</string>
+  
 
 
   <string name="planet_prompt">Choose a planet</string>
