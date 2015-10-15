@@ -9,6 +9,12 @@
             <item
                 android:id="@+id/LogOutMenuButton"
                 android:title="@string/LogOut" />
+            <item
+                android:id="@+id/RenameDialogMenuButton"
+                android:title="@string/RenameDialog" />
+            <item
+                android:id="@+id/DeleteDialogMenuButton"
+                android:title="@string/DeleteDialog" />
         </menu>
     </item>
 </menu>

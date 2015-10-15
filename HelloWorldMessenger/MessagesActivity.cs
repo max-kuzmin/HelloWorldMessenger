@@ -19,6 +19,7 @@ namespace HelloWorldMessenger
     {
 
         long dialog_id = 0;
+        string dialogName = "";
 
         MessagesAdapter adapter = null;
 
@@ -31,9 +32,11 @@ namespace HelloWorldMessenger
             SetTitle(Resource.String.Messages);
 
             dialog_id = Intent.GetLongExtra("dialog_id", 0);
+            dialogName = Intent.GetStringExtra("dialogName");
+
+
+            ActionBar.Title = dialogName;
         }
-
-
 
 
         public override bool OnCreateOptionsMenu(IMenu menu)
@@ -51,18 +54,44 @@ namespace HelloWorldMessenger
                 HelpersAPI.LogOut();
                 StartActivity(new Intent(this, typeof(SingInActivity)));
             }
+            else if (item.ItemId == Resource.Id.RenameDialogMenuButton)
+            {
+                RenameDialog dialog = new RenameDialog();
+                dialog.OnDismiss += Dialog_DismissEvent;
+                dialog.Show(FragmentManager, "RenameDialog");
+            }
+            else if (item.ItemId == Resource.Id.DeleteDialogMenuButton)
+            {
+                JsonValue result = HelpersAPI.RequestToAPI("dialog/delete?dialog_id=" + dialog_id);
+                if (result.ContainsKey("status") && result["status"] == "true")
+                {
+                    StartActivity(new Intent(this, typeof(DialogsActivity)));
+                }
+            }
 
             return base.OnOptionsItemSelected(item);
         }
 
-
+        private void Dialog_DismissEvent(object sender, EventArgs e)
+        {
+            RenameDialog dialog = (sender as RenameDialog);
+            if (dialog.Text != "")
+            {
+                string param = "dialog/rename?dialog_id=" + dialog_id + "&name=" + dialog.Text;
+                JsonValue result = HelpersAPI.RequestToAPI(param);
+                if (result.ContainsKey("status") && result["status"] == "true")
+                {
+                    ActionBar.Title = dialog.Text;
+                }
+            }
+        }
 
         protected override void OnStart()
         {
             base.OnStart();
 
             //проверка на онлайн и авторизацию
-            if (!HelpersAPI.AuthCheckAPI() &&  HelpersAPI.MyLogin=="")
+            if (!HelpersAPI.AuthCheckAPI() && HelpersAPI.MyLogin == "")
             {
                 StartActivity(new Intent(this, typeof(SingInActivity)));
                 return;
@@ -89,7 +118,7 @@ namespace HelloWorldMessenger
 
             if (HelpersAPI.Online)
             {
-                
+
                 //запрос на сервер за новыми сообщениями
                 List<MessageData> itemsFromAPI = new List<MessageData>();
 
@@ -134,7 +163,7 @@ namespace HelloWorldMessenger
 
                     List<MessageData> items = new List<MessageData>();
                     long lastTime = 0;
-                    if (adapter.Count>0) lastTime = ((MessageData)adapter.GetItem(adapter.Count - 1)).Time;
+                    if (adapter.Count > 0) lastTime = ((MessageData)adapter.GetItem(adapter.Count - 1)).Time;
                     string param2 = "message/show?dialog_id=" + dialog_id + "&time=" + lastTime;
                     JsonValue jsonItems = HelpersAPI.RequestToAPI(param2);
                     if (jsonItems.JsonType == JsonType.Array || !jsonItems.ContainsKey("status"))
@@ -147,14 +176,14 @@ namespace HelloWorldMessenger
                         HelpersDB.PutMessages(items, dialog_id);
                         adapter.AddItems(items);
 
-                        
+
                         //прокрутка вниз
                         ListView messages = FindViewById<ListView>(Resource.Id.MessagesList);
                         messages.SetSelection(messages.Adapter.Count - 1);
                     }
                 }
             }
-            
+
         }
 
         private void Messages_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
@@ -270,5 +299,41 @@ namespace HelloWorldMessenger
             else if (x.Time < y.Time) return -1;
             else return 0;
         }
+    }
+
+
+    public class RenameDialog : DialogFragment
+    {
+        View v;
+        string text = "";
+        public string Text
+        {
+            get
+            {
+                return text;
+            }
+
+        }
+
+        public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+        {
+            Dialog.SetTitle(Resource.String.EnterName);
+            v = inflater.Inflate(Resource.Layout.RenameDialog, container, false);
+            Button ok = v.FindViewById<Button>(Resource.Id.OkButton);
+            ok.Click += Ok_Click;
+            return v;
+        }
+
+
+        private void Ok_Click(object sender, EventArgs e)
+        {
+            EditText newName = v.FindViewById<EditText>(Resource.Id.EditName);
+            text = newName.Text;
+            Dialog.Dismiss();
+            OnDismiss(this, new EventArgs());
+        }
+
+
+        new public event EventHandler<EventArgs> OnDismiss;
     }
 }

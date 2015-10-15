@@ -107,9 +107,11 @@ namespace HelloWorldMessenger
         {
 
             long dialog_id = ((DialogData)adapter.GetItem(e.Position)).Id;
+            string dialogName = ((DialogData)adapter.GetItem(e.Position)).Name;
             Intent intent = new Intent(this, typeof(MessagesActivity));
             intent.AddFlags(ActivityFlags.NoHistory);
             intent.PutExtra("dialog_id", dialog_id);
+            intent.PutExtra("dialogName", dialogName);
             StartActivity(intent);
         }
     }
