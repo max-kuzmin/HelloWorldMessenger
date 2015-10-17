@@ -68,6 +68,13 @@ namespace HelloWorldMessenger
                     StartActivity(new Intent(this, typeof(DialogsActivity)));
                 }
             }
+            else if (item.ItemId == Resource.Id.ChangeMyInfoButton)
+            {
+                if (HelpersAPI.Online)
+                {
+                    StartActivity(new Intent(this, typeof(ChangeUserInfoActivity)));
+                }
+            }
 
             return base.OnOptionsItemSelected(item);
         }
@@ -262,7 +269,7 @@ namespace HelloWorldMessenger
 
             DateTime date = HelpersAPI.FromUnixTime(list.ElementAt(position).Time);
 
-            view.FindViewById<TextView>(Resource.Id.MessageTimeListItem).Text = date.ToShortDateString() + " " + date.ToLongTimeString();
+            view.FindViewById<TextView>(Resource.Id.MessageTimeListItem).Text = date.ToString("HH:mm:ss dd.MM");
 
             //настраиваем вид
             if (HelpersAPI.MyLogin == list.ElementAt(position).Login)

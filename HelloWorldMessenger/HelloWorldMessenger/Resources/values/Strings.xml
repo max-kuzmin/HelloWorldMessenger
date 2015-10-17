@@ -27,18 +27,14 @@
   <string name="DeleteDialog">Delete dialog</string>
   <string name="Ok">OK</string>
   <string name="EnterName">Enter new name</string>
+  <string name="Save">Save</string>
+  <string name="OldPassword">Old password</string>
+  <string name="NewPassword">New password</string>
+  <string name="SaveError">Save error</string>
+  <string name="ChangeMyInfo">Change my info</string>
+  <string name="HasNewMessages">New messages</string>
   
 
 
-  <string name="planet_prompt">Choose a planet</string>
-  <string-array name="planets_array">
-    <item>Mercury</item>
-    <item>Venus</item>
-    <item>Earth</item>
-    <item>Mars</item>
-    <item>Jupiter</item>
-    <item>Saturn</item>
-    <item>Uranus</item>
-    <item>Neptune</item>
-  </string-array>
+
 </resources>

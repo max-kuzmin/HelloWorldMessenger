@@ -15,6 +15,9 @@
             <item
                 android:id="@+id/DeleteDialogMenuButton"
                 android:title="@string/DeleteDialog" />
+            <item
+                android:id="@+id/ChangeMyInfoButton"
+                android:title="@string/ChangeMyInfo" />
         </menu>
     </item>
 </menu>

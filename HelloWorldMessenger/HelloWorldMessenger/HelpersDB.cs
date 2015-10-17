@@ -38,6 +38,7 @@ namespace HelloWorldMessenger
         public long Time { get; set; }
         public string Members { get; set; }
         public string Login { get; set; }
+        public bool IsNew { get; set; }
     }
 
 
@@ -91,7 +92,7 @@ namespace HelloWorldMessenger
 
             foreach (DialogData item in dialogs)
             {
-                db.Insert(new DialogsTable() { Dialog_ID = item.Id, Name = item.Name, Time = item.Time, Members = item.Members, Login = login});
+                db.Insert(new DialogsTable() { Dialog_ID = item.Id, Name = item.Name, Time = item.Time, Members = item.Members, Login = login, IsNew = item.IsNew});
 
             }
         }
@@ -106,7 +107,7 @@ namespace HelloWorldMessenger
 
             foreach (DialogsTable item in dialogs)
             {
-                result.Add(new DialogData(item.Dialog_ID, item.Name, item.Members, item.Time));
+                result.Add(new DialogData(item.Dialog_ID, item.Name, item.Members, item.Time, item.IsNew));
 
             }
             return result;
