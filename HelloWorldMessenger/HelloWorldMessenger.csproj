@@ -64,6 +64,8 @@
     <Compile Include="HelpersAPI.cs" />
     <Compile Include="HelpersDB.cs" />
     <Compile Include="MessagesActivity.cs" />
+    <Compile Include="ChangeUserInfoActivity.cs" />
+    <Compile Include="NewMessagesService.cs" />
     <Compile Include="SQLite.cs" />
     <Compile Include="SQLiteAsync.cs" />
     <Compile Include="UserInfoActivity.cs" />
@@ -105,6 +107,7 @@
     <AndroidResource Include="Resources\layout\RenameDialog.axml">
       <SubType>AndroidResource</SubType>
     </AndroidResource>
+    <AndroidResource Include="Resources\layout\ChangeUserInfo.axml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\SingIn.axml" />

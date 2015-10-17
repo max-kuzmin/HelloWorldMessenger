@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using Android.Graphics;
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -80,7 +81,7 @@ namespace HelloWorldMessenger
                 {
                     foreach (JsonValue item in jsonItems)
                     {
-                        items.Add(new DialogData(item["dialog_id"], item["name"], item["users"], item["time"]));
+                        items.Add(new DialogData(item["dialog_id"], item["name"], item["users"], item["time"], item["new"]==1));
                     }
 
                     //очистка списка диалогов и добавление диалогов из апи
@@ -176,9 +177,12 @@ namespace HelloWorldMessenger
 
             DateTime date = HelpersAPI.FromUnixTime(list.ElementAt(position).Time);
 
-            view.FindViewById<TextView>(Resource.Id.DialogTimeListItem).Text = date.ToShortDateString() +" " + date.ToLongTimeString();
+            view.FindViewById<TextView>(Resource.Id.DialogTimeListItem).Text = date.ToString("HH:mm:ss dd.MM");
 
-
+            if (list.ElementAt(position).IsNew)
+            {
+                view.FindViewById<LinearLayout>(Resource.Id.DialogListItem).SetBackgroundColor(Color.LightGray); 
+            }
 
             return view;
         }
@@ -192,13 +196,16 @@ namespace HelloWorldMessenger
         public string Members = "";
         public long Id = 0;
         public long Time = 0;
+        public bool IsNew = false;
 
-        public DialogData(long id, string name, string members, long time)
+        public DialogData(long id, string name, string members, long time, bool isNew)
         {
             Name = name;
             Members = members;
             Id = id;
             Time = time;
+            IsNew = isNew;
+            
         }
 
 

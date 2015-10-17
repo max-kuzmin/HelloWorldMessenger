@@ -46,6 +46,7 @@ namespace HelloWorldMessenger
             if (HelpersAPI.AuthCheckAPI())
             {
                 StartActivity(new Intent(this, typeof(DialogsActivity)));
+                if (HelpersAPI.Online) StartService(new Intent(this, typeof(NewMessagesService)));
                 return;
             }
 
@@ -62,6 +63,7 @@ namespace HelloWorldMessenger
             if (HelpersAPI.SinginToAPI(login, pass) && HelpersAPI.Online)
             {
                 StartActivity(new Intent(this, typeof(DialogsActivity)));
+                StartService(new Intent(this, typeof(NewMessagesService)));
                 return;
             }
             //логин, если оффлайн и логин совпадает с сохраненным

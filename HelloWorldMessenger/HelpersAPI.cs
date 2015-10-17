@@ -19,8 +19,7 @@ namespace HelloWorldMessenger
     public class HelpersAPI
     {
 
-        //doto картинки аватарки, проверка отсутвия инета
-        //чтобы не отображался сам пользователь в поиске, изменение своих данных, красивое время
+        //doto картинки аватарки, проверка отсутвия инета - нужен сервер, обновление сообщений в мессадж, обновление диалогов, красивости для всего
 
         static string server = "http://169.254.80.80/HelloWorldAPI/";
         static string CookieDomain = "169.254.80.80";
@@ -126,7 +125,6 @@ namespace HelloWorldMessenger
         {
             DateTime date = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
             date = date.AddSeconds(seconds).ToLocalTime();
-
             return date;
         }
 
