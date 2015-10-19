@@ -21,11 +21,11 @@ namespace HelloWorldMessenger
 
         //doto картинки аватарки, проверка отсутвия инета - нужен сервер, обновление сообщений в мессадж, обновление диалогов, красивости для всего
 
-        static string server = "http://169.254.80.80/HelloWorldAPI/";
-        static string CookieDomain = "169.254.80.80";
+        //static string server = "http://169.254.80.80/HelloWorldAPI/";
+        //static string CookieDomain = "169.254.80.80";
 
-        //static string server = "http://gsomgsom.icycoolhosting.com/HelloWorldAPI/";
-        //static string CookieDomain = "gsomgsom.icycoolhosting.com";
+        static string server = "http://api-maxgsomgsom.rhcloud.com/";
+        static string CookieDomain = "api-maxgsomgsom.rhcloud.com";
 
         static string myLogin = "";
         static bool online = true;
