@@ -17,7 +17,7 @@ namespace HelloWorldMessenger
 {
 
     [Service]
-    class NewMessagesService : Service
+    public class NewMessagesService : Service
     {
         public override IBinder OnBind(Intent intent)
         {
@@ -25,13 +25,13 @@ namespace HelloWorldMessenger
         }
 
         Timer t;
-
+        
 
         public override void OnCreate()
         {
             base.OnCreate();
 
-            t = new Timer(10000);
+            t = new Timer(HelpersAPI.UpdInterval);
             t.Elapsed += T_Elapsed;
             t.Start();
             
@@ -42,7 +42,7 @@ namespace HelloWorldMessenger
         private void T_Elapsed(object sender, ElapsedEventArgs e)
         {
 
-            if (HelpersAPI.AuthCheckAPI())
+            if (HelpersAPI.AuthCheckAPI() && HelpersAPI.NeedCheckInBackground)
             {
                 JsonValue result = HelpersAPI.RequestToAPI("dialog/check");
 
@@ -62,6 +62,7 @@ namespace HelloWorldMessenger
 
                         //notification.Vibrate = new long[] { 100 };
                         notification.SetLatestEventInfo(this, GetString(Resource.String.HasNewMessages), text, pending);
+                        notification.Flags = NotificationFlags.AutoCancel;
                         nMgr.Notify(item["dialog_id"], notification);
                         
                     }
