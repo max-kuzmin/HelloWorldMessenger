@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Json;
+using System.Threading.Tasks;
 
 using Android.App;
 using Android.Content;
@@ -19,7 +20,10 @@ namespace HelloWorldMessenger
     public class HelpersAPI
     {
 
-        //doto картинки аватарки, проверка отсутвия инета - нужен сервер, обновление сообщений в мессадж, обновление диалогов, красивости для всего
+        //doto картинки аватарки, красивости для всего, сделать чтобы при ввобде все поднималось вверх
+        //проверить не чекать логин в каждом активити, обновление сообщений и диалогов
+        //dialogsactivity перезапускается хз почему, сервис не всегда срабатывает
+        //останавливать таймеры при паузе приложения и задавать флаг для сервиса в самом активити а не в асинхр
 
         //static string server = "http://169.254.80.80/HelloWorldAPI/";
         //static string CookieDomain = "169.254.80.80";
@@ -29,6 +33,13 @@ namespace HelloWorldMessenger
 
         static string myLogin = "";
         static bool online = true;
+
+        static int updInterval = 10000;
+
+
+        public static bool NeedCheckInBackground { get; set; }
+
+        static bool authOnlineChecked = false;
 
         public static bool Online
         {
@@ -57,22 +68,30 @@ namespace HelloWorldMessenger
 
         }
 
+        public static int UpdInterval
+        {
+            get
+            {
+                return updInterval;
+            }
+        }
+
         public static JsonValue RequestToAPI(string param)
         {
             JsonValue json = null;
 
             try
             {
-                //проверка на подключение к сети /////////////////////////////////
+                //проверка на подключение к сети
                 ConnectivityManager conMgr = (ConnectivityManager)Application.Context.GetSystemService(Context.ConnectivityService);
                 NetworkInfo netInfo = conMgr.ActiveNetworkInfo;
-                //if (netInfo == null || !netInfo.IsConnected) throw new Exception();
+                if (netInfo == null || !netInfo.IsConnected) throw new Exception();
 
                 //запрос к апи
                 System.Uri address = new System.Uri(new System.Uri(Server), param);
                 HttpWebRequest req = new HttpWebRequest(address);
                 req.CookieContainer = GetCookieFromSetting();
-                req.Timeout = 1000;
+                req.Timeout = 60000;
                 HttpWebResponse res = (HttpWebResponse)req.GetResponse();
                 StreamReader reader = new StreamReader(res.GetResponseStream());
 
@@ -90,6 +109,8 @@ namespace HelloWorldMessenger
                 //если ошибка запроса - нет инета
                 json = JsonValue.Parse("{\"status\":\"offline\"}");
                 online = false;
+
+                authOnlineChecked = false;
 
                 ISharedPreferences prefs = Application.Context.GetSharedPreferences("Setting", FileCreationMode.Private);
 
@@ -138,13 +159,17 @@ namespace HelloWorldMessenger
 
                 if (login.Length > 0 && pass.Length > 0)
                 {
+                    //проверка на подключение к сети
+                    ConnectivityManager conMgr = (ConnectivityManager)Application.Context.GetSystemService(Context.ConnectivityService);
+                    NetworkInfo netInfo = conMgr.ActiveNetworkInfo;
+                    if (netInfo == null || !netInfo.IsConnected) throw new Exception();
 
                     //запрос
                     string param = "login?login=" + login + "&pass=" + pass;
 
                     System.Uri address = new System.Uri(new System.Uri(Server), param);
                     HttpWebRequest req = new HttpWebRequest(address);
-                    req.Timeout = 1000;
+                    req.Timeout = 60000;
                     HttpWebResponse res = (HttpWebResponse)req.GetResponse();
                     StreamReader reader = new StreamReader(res.GetResponseStream());
                     string resText = reader.ReadToEnd();
@@ -178,6 +203,7 @@ namespace HelloWorldMessenger
             {
                 //если ошибка - нет интернета
                 online = false;
+                authOnlineChecked = false;
                 Toast.MakeText(Application.Context, Resource.String.NoInternet, ToastLength.Long).Show();
             }
 
@@ -190,6 +216,7 @@ namespace HelloWorldMessenger
         {
             ISharedPreferences prefs = Application.Context.GetSharedPreferences("Setting", FileCreationMode.Private);
             ISharedPreferencesEditor prefEditor = prefs.Edit();
+            authOnlineChecked = false;
             prefEditor.Clear();
             prefEditor.Commit();
         }
@@ -197,22 +224,28 @@ namespace HelloWorldMessenger
         //проверка на авторизацию в апи
         public static bool AuthCheckAPI()
         {
-            JsonValue json = RequestToAPI("login/check");
-
-            ISharedPreferences prefs = Application.Context.GetSharedPreferences("Setting", FileCreationMode.Private);
-            ISharedPreferencesEditor prefEditor = prefs.Edit();
-
-            if (json.ContainsKey("login"))
+            //коннектимся к инету только 1 раз для проверка авторизации
+            if (!authOnlineChecked)
             {
-                myLogin = json["login"];
-                //сохраняем логин
-                prefEditor.PutString("login", myLogin);
-                prefEditor.Commit();
-                return true;
-            }
+                JsonValue json = RequestToAPI("login/check");
 
-            myLogin = prefs.GetString("login", "");
-            return false;
+                ISharedPreferences prefs = Application.Context.GetSharedPreferences("Setting", FileCreationMode.Private);
+                ISharedPreferencesEditor prefEditor = prefs.Edit();
+
+                if (json.ContainsKey("login"))
+                {
+                    myLogin = json["login"];
+                    //сохраняем логин
+                    prefEditor.PutString("login", myLogin);
+                    prefEditor.Commit();
+                    authOnlineChecked = true;
+                    return true;
+                }
+
+                myLogin = prefs.GetString("login", "");
+                return false;
+            }
+            return online;
         }
     }
 }

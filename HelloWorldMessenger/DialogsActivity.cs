@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 using Android.Graphics;
 using Android.App;
@@ -13,6 +14,7 @@ using Android.Widget;
 using System.Json;
 using Java.Lang;
 using System.Collections;
+using Java.Util;
 
 namespace HelloWorldMessenger
 {
@@ -20,8 +22,8 @@ namespace HelloWorldMessenger
     public class DialogsActivity : Activity
     {
 
-        DialogsAdapter adapter = null;
-
+        ListView dialogs = null;
+        Timer t = null;
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -56,14 +58,13 @@ namespace HelloWorldMessenger
 
 
 
+
         protected override void OnStart()
         {
             base.OnStart();
 
-            ListView dialogs = FindViewById<ListView>(Resource.Id.DialogsList);
+            dialogs = FindViewById<ListView>(Resource.Id.DialogsList);
             dialogs.ItemClick += Dialogs_ItemClick;
-
-            List<DialogData> items = new List<DialogData>();
 
             if (!HelpersAPI.AuthCheckAPI() && HelpersAPI.MyLogin == "")
             {
@@ -72,48 +73,34 @@ namespace HelloWorldMessenger
                 return;
             }
 
-            if (HelpersAPI.Online)
-            {
-                //получение диалогов из апи
-                JsonValue jsonItems = HelpersAPI.RequestToAPI("dialog/show");
-
-                if (jsonItems.JsonType == JsonType.Array || !jsonItems.ContainsKey("status"))
-                {
-                    foreach (JsonValue item in jsonItems)
-                    {
-                        items.Add(new DialogData(item["dialog_id"], item["name"], item["users"], item["time"], item["new"]==1));
-                    }
-
-                    //очистка списка диалогов и добавление диалогов из апи
-                    HelpersDB.DeleteDialogs(HelpersAPI.MyLogin);
-                    HelpersDB.PutDialogs(items, HelpersAPI.MyLogin);
-
-                }
+            //запоняем диалоги из базы
+            dialogs.Adapter = new DialogsAdapter(this, HelpersDB.GetDialogs(HelpersAPI.MyLogin));
 
 
-            }
-            else
-            {
-                //получение диалогов из базы
-                items.AddRange(HelpersDB.GetDialogs(HelpersAPI.MyLogin));
-            }
-            
+            //проверка диалогов каждые 10 сек
+            t = new Timer();
+            t.ScheduleAtFixedRate(new UpdDialogsTimerTask(this, dialogs), 0, HelpersAPI.UpdInterval);
 
-            adapter = new DialogsAdapter(this, items);
-            dialogs.Adapter = adapter;
+
         }
 
         //обработка клика на диалоге
         private void Dialogs_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
 
-            long dialog_id = ((DialogData)adapter.GetItem(e.Position)).Id;
-            string dialogName = ((DialogData)adapter.GetItem(e.Position)).Name;
+            long dialog_id = ((DialogData)dialogs.Adapter.GetItem(e.Position)).Id;
+            string dialogName = ((DialogData)dialogs.Adapter.GetItem(e.Position)).Name;
             Intent intent = new Intent(this, typeof(MessagesActivity));
             intent.AddFlags(ActivityFlags.NoHistory);
             intent.PutExtra("dialog_id", dialog_id);
             intent.PutExtra("dialogName", dialogName);
             StartActivity(intent);
+        }
+
+        protected override void OnPause()
+        {
+            base.OnPause();
+            HelpersAPI.NeedCheckInBackground = true;
         }
     }
 
@@ -131,10 +118,10 @@ namespace HelloWorldMessenger
         {
             ctx = context;
             list = new List<DialogData>(items);
-
-            //сортировка по времени
             list.Sort(DialogData.Comparator);
         }
+
+
 
         public override DialogData this[int position]
         {
@@ -217,4 +204,83 @@ namespace HelloWorldMessenger
 
             }
 }
+
+
+    //асинхронный запрос к апи
+    public class AsyncGetDialogsFromAPI : AsyncTask
+    {
+
+        List<DialogData> items;
+
+        Context ctx = null;
+        ListView dialogs = null;
+
+        public AsyncGetDialogsFromAPI(Context context, ListView dialogs)
+        {
+            ctx = context;
+            this.dialogs = dialogs;
+            items = new List<DialogData>();
+        }
+
+
+        protected override Java.Lang.Object DoInBackground(params Java.Lang.Object[] @params)
+        {
+
+            if (HelpersAPI.Online)
+            {
+
+                //получение диалогов из апи
+                JsonValue jsonItems = HelpersAPI.RequestToAPI("dialog/show");
+
+                if (jsonItems.JsonType == JsonType.Array || !jsonItems.ContainsKey("status"))
+                {
+                    foreach (JsonValue item in jsonItems)
+                    {
+                        items.Add(new DialogData(item["dialog_id"], item["name"], item["users"], item["time"], item["new"] == 1));
+                    }
+
+                    //очистка списка диалогов и добавление диалогов из апи
+                    HelpersDB.DeleteDialogs(HelpersAPI.MyLogin);
+                    HelpersDB.PutDialogs(items, HelpersAPI.MyLogin);
+
+                }
+
+                HelpersAPI.NeedCheckInBackground = false;
+
+            }
+
+            return null;
+        }
+
+        protected override void OnPostExecute(Java.Lang.Object result)
+        {
+            base.OnPostExecute(result);
+
+            dialogs.Adapter = new DialogsAdapter(ctx, items);
+
+        }
+    }
+
+    //событие таймера для обновления списка диалогов
+    public class UpdDialogsTimerTask : TimerTask
+    {
+
+        Context ctx = null;
+        ListView dialogs = null;
+
+        public UpdDialogsTimerTask(Context context, ListView dialogs)
+        {
+            ctx = context;
+            this.dialogs = dialogs;
+        }
+
+
+        public override void Run()
+        {
+
+            //запускаем обращение к апи в отдельном потоке
+            AsyncGetDialogsFromAPI async1 = new AsyncGetDialogsFromAPI(ctx, dialogs);
+            async1.Execute();
+        }
+    }
 }

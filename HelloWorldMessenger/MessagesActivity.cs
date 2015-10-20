@@ -10,7 +10,8 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using System.Json;
-
+using Java.Lang;
+using Java.Util;
 
 namespace HelloWorldMessenger
 {
@@ -20,8 +21,9 @@ namespace HelloWorldMessenger
 
         long dialog_id = 0;
         string dialogName = "";
+        Timer t;
 
-        MessagesAdapter adapter = null;
+        ListView messages = null;
 
 
         protected override void OnCreate(Bundle bundle)
@@ -108,7 +110,7 @@ namespace HelloWorldMessenger
             Button send = FindViewById<Button>(Resource.Id.SendMessageButton);
             send.Click += Send_Click;
 
-            ListView messages = FindViewById<ListView>(Resource.Id.MessagesList);
+            messages = FindViewById<ListView>(Resource.Id.MessagesList);
             messages.ItemClick += Messages_ItemClick;
 
 
@@ -121,35 +123,14 @@ namespace HelloWorldMessenger
                 lastTime = messagesFromDB[messagesFromDB.Count - 1].Time;
                 items.AddRange(messagesFromDB);
             }
-
-
-            if (HelpersAPI.Online)
-            {
-
-                //запрос на сервер за новыми сообщениями
-                List<MessageData> itemsFromAPI = new List<MessageData>();
-
-                string param = "message/show?dialog_id=" + dialog_id + "&time=" + lastTime;
-                JsonValue jsonItems = HelpersAPI.RequestToAPI(param);
-
-                if (jsonItems.JsonType == JsonType.Array || !jsonItems.ContainsKey("status"))
-                {
-                    foreach (JsonValue item in jsonItems)
-                    {
-                        itemsFromAPI.Add(new MessageData(item["message_id"], item["text"], item["login"], item["time"]));
-                    }
-
-                }
-
-                //добавляем сообщения с сервера в БД
-                HelpersDB.PutMessages(itemsFromAPI, dialog_id);
-                items.AddRange(itemsFromAPI);
-            }
-
-            //объединяем списки и выводим
-            adapter = new MessagesAdapter(this, items);
-            messages.Adapter = adapter;
+            messages.Adapter = new MessagesAdapter(this, items);
             messages.SetSelection(messages.Adapter.Count - 1);
+
+
+            //проверка сообщений каждые 10 сек
+            t = new Timer();
+            t.ScheduleAtFixedRate(new UpdMessagesTimerTask(this, messages, dialog_id), 0, HelpersAPI.UpdInterval);
+
 
 
         }
@@ -167,27 +148,10 @@ namespace HelloWorldMessenger
                 //получаем новые сообщения с сервера
                 if (result.ContainsKey("status") && result["status"] == "true")
                 {
-
-                    List<MessageData> items = new List<MessageData>();
-                    long lastTime = 0;
-                    if (adapter.Count > 0) lastTime = ((MessageData)adapter.GetItem(adapter.Count - 1)).Time;
-                    string param2 = "message/show?dialog_id=" + dialog_id + "&time=" + lastTime;
-                    JsonValue jsonItems = HelpersAPI.RequestToAPI(param2);
-                    if (jsonItems.JsonType == JsonType.Array || !jsonItems.ContainsKey("status"))
-                    {
-                        foreach (JsonValue item in jsonItems)
-                        {
-                            items.Add(new MessageData(item["message_id"], item["text"], item["login"], item["time"]));
-                        }
-                        //добавляем их в активити и в БД
-                        HelpersDB.PutMessages(items, dialog_id);
-                        adapter.AddItems(items);
-
-
-                        //прокрутка вниз
-                        ListView messages = FindViewById<ListView>(Resource.Id.MessagesList);
-                        messages.SetSelection(messages.Adapter.Count - 1);
-                    }
+                    messageText.Text = "";
+                    //асинхронно проверяем новые сообщения - не надо так, начинаю лезть баги
+                    //AsyncGetMessagesFromAPI async = new AsyncGetMessagesFromAPI(this, messages, dialog_id);
+                    //async.Execute();
                 }
             }
 
@@ -197,6 +161,13 @@ namespace HelloWorldMessenger
         {
             //клик на сообщении
             throw new NotImplementedException();
+        }
+
+
+        protected override void OnPause()
+        {
+            base.OnPause();
+            HelpersAPI.NeedCheckInBackground = true;
         }
     }
 
@@ -342,5 +313,95 @@ namespace HelloWorldMessenger
 
 
         new public event EventHandler<EventArgs> OnDismiss;
+    }
+
+
+
+
+    //асинхронное получение сообщений из апи
+    public class AsyncGetMessagesFromAPI : AsyncTask
+    {
+        Context ctx = null;
+        ListView messages = null;
+        List<MessageData> items;
+        long dialog_id = 0;
+        long lastTime = 0;
+
+        public AsyncGetMessagesFromAPI(Context context, ListView messages, long dialog_id)
+        {
+            ctx = context;
+            this.messages = messages;
+            items = new List<MessageData>();
+            this.dialog_id = dialog_id;
+
+            if (messages.Adapter.Count > 0) lastTime = ((MessageData)messages.Adapter.GetItem(messages.Adapter.Count - 1)).Time;
+        }
+
+
+        protected override Java.Lang.Object DoInBackground(params Java.Lang.Object[] @params)
+        {
+
+            if (HelpersAPI.Online)
+            {
+
+                //запрос на сервер за новыми сообщениями
+                List<MessageData> itemsFromAPI = new List<MessageData>();
+
+                string param = "message/show?dialog_id=" + dialog_id + "&time=" + lastTime;
+                JsonValue jsonItems = HelpersAPI.RequestToAPI(param);
+
+                if (jsonItems.JsonType == JsonType.Array || !jsonItems.ContainsKey("status"))
+                {
+                    foreach (JsonValue item in jsonItems)
+                    {
+                        itemsFromAPI.Add(new MessageData(item["message_id"], item["text"], item["login"], item["time"]));
+                    }
+
+                }
+
+                //добавляем сообщения с сервера в БД
+                HelpersDB.PutMessages(itemsFromAPI, dialog_id);
+                items.AddRange(itemsFromAPI);
+
+                HelpersAPI.NeedCheckInBackground = false;
+            }
+
+
+            return null;
+
+
+        }
+
+        protected override void OnPostExecute(Java.Lang.Object result)
+        {
+            base.OnPostExecute(result);
+
+            (messages.Adapter as MessagesAdapter).AddItems(items);
+            messages.SetSelection(messages.Adapter.Count - 1);
+        }
+    }
+
+
+    //событие для таймера обновления сообщений
+    public class UpdMessagesTimerTask : TimerTask
+    {
+
+        Context ctx = null;
+        ListView messages = null;
+        long dialog_id = 0;
+
+        public UpdMessagesTimerTask(Context context, ListView messages, long dialog_id)
+        {
+            ctx = context;
+            this.messages = messages;
+            this.dialog_id = dialog_id;
+        }
+
+
+        public override void Run()
+        {
+            AsyncGetMessagesFromAPI async = new AsyncGetMessagesFromAPI(ctx, messages, dialog_id);
+            async.Execute();
+        }
     }
 }
