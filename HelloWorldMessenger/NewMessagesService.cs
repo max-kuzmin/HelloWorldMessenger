@@ -58,6 +58,7 @@ namespace HelloWorldMessenger
                         Intent intent = new Intent(this, typeof(MessagesActivity));
                         intent.PutExtra("dialog_id", (long)item["dialog_id"]);
                         intent.PutExtra("dialogName", (string)item["name"]);
+                        intent.AddFlags(ActivityFlags.NoHistory);
                         PendingIntent pending = PendingIntent.GetActivity(this, 0, intent, PendingIntentFlags.CancelCurrent);
 
                         //notification.Vibrate = new long[] { 100 };

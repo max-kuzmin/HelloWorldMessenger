@@ -46,7 +46,8 @@ namespace HelloWorldMessenger
     {
 
         static SQLiteConnection db = null;
-
+        static SQLiteAsyncConnection dbAsync = null;
+        
         //подключниение к БД
         static void ConnectToDB()
         {
@@ -54,6 +55,14 @@ namespace HelloWorldMessenger
             db = new SQLiteConnection(dbPath);
             db.CreateTable<MessagesTable>();
             db.CreateTable<DialogsTable>();
+        }
+
+        static void ConnectToDBAsync()
+        {
+            string dbPath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "HelloWorldDB.db3");
+            dbAsync = new SQLiteAsyncConnection(dbPath);
+            dbAsync.CreateTableAsync<MessagesTable>();
+            dbAsync.CreateTableAsync<DialogsTable>();
         }
 
         //получить сообщения из БД в виде списка
@@ -75,26 +84,32 @@ namespace HelloWorldMessenger
         //поместить сообщения в БД
         public static void PutMessages(List<MessageData> messages, long dialog_id)
         {
-            if (db == null) ConnectToDB();
+            if (dbAsync == null) ConnectToDBAsync();
+
+            List<MessagesTable> items = new List<MessagesTable>();
 
             foreach (MessageData item in messages)
             {
-                db.Insert(new MessagesTable() { Login = item.Login, Dialog_ID = dialog_id, Message_ID = item.Id, Text = item.Text, Time = item.Time });
-
+                items.Add(new MessagesTable() { Login = item.Login, Dialog_ID = dialog_id, Message_ID = item.Id, Text = item.Text, Time = item.Time });
             }
+
+            if (items.Count>0) dbAsync.InsertAllAsync(items);
         }
 
 
         //поместить диалоги в БД
         public static void PutDialogs(List<DialogData> dialogs, string login)
         {
-            if (db == null) ConnectToDB();
+            if (dbAsync == null) ConnectToDBAsync();
+
+            List<DialogsTable> items = new List<DialogsTable>();
 
             foreach (DialogData item in dialogs)
             {
-                db.Insert(new DialogsTable() { Dialog_ID = item.Id, Name = item.Name, Time = item.Time, Members = item.Members, Login = login, IsNew = item.IsNew});
-
+                items.Add(new DialogsTable() { Dialog_ID = item.Id, Name = item.Name, Time = item.Time, Members = item.Members, Login = login, IsNew = item.IsNew });
             }
+
+            if (items.Count > 0) dbAsync.InsertAllAsync(items);
         }
 
         //получить диалоги из БД по логину
@@ -116,24 +131,50 @@ namespace HelloWorldMessenger
         //обновить время диалога в БД
         public static void UpdateDialogTime(long dialog_id, long time)
         {
+            if (dbAsync == null) ConnectToDBAsync();
             if (db == null) ConnectToDB();
 
             DialogsTable dialog = db.Table<DialogsTable>().First((m) => m.Dialog_ID == dialog_id);
             dialog.Time = time;
-            db.Update(dialog);
+            dbAsync.UpdateAsync(dialog);
         }
 
 
-        //удалить диалог из БД
+        //удалить диалоги из БД
         public static void DeleteDialogs(string login)
         {
+            if (dbAsync == null) ConnectToDBAsync();
             if (db == null) ConnectToDB();
 
             TableQuery<DialogsTable> dialogs = db.Table<DialogsTable>().Where((m) => m.Login == login);
+
             foreach (DialogsTable item in dialogs)
             {
-                db.Delete(item);
+                dbAsync.DeleteAsync(item);
             }
         }
+
+
+
+        //обновить диалоги в БД -- не продумано удаление диалогов и добавление !!!!!!!!!!!!!!!!!!!!!!!!!
+        //public static void UpdDialogs(IEnumerable<DialogData> items)
+        //{
+        //    if (dbAsync == null) ConnectToDBAsync();
+        //    if (db == null) ConnectToDB();
+
+
+        //    foreach (DialogData item in items)
+        //    {
+        //        DialogsTable dialog = db.Table<DialogsTable>().First((m) => item.Id == m.Dialog_ID);
+        //        if (dialog == null) continue;
+        //        dialog.IsNew = item.IsNew;
+        //        dialog.Name = item.Name;
+        //        dialog.Time = item.Time;
+
+        //        dbAsync.UpdateAsync(dialog);
+        //    }
+
+
+        //}
     }
 }
