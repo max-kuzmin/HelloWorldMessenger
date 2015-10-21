@@ -73,16 +73,24 @@ namespace HelloWorldMessenger
                 return;
             }
 
+            HelpersAPI.NeedCheckInBackground = false;
+
             //запоняем диалоги из базы
             dialogs.Adapter = new DialogsAdapter(this, HelpersDB.GetDialogs(HelpersAPI.MyLogin));
 
 
             //проверка диалогов каждые 10 сек
             t = new Timer();
-            t.ScheduleAtFixedRate(new UpdDialogsTimerTask(this, dialogs), 0, HelpersAPI.UpdInterval);
+            t.ScheduleAtFixedRate(new UpdDialogsTimerTask(this, dialogs), HelpersAPI.UpdInterval, HelpersAPI.UpdInterval);
+
+            //запускаем обращение к апи в отдельном потоке
+            AsyncGetDialogsFromAPI async = new AsyncGetDialogsFromAPI(this, dialogs, false);
+            async.Execute();
 
 
         }
+
+
 
         //обработка клика на диалоге
         private void Dialogs_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
@@ -214,12 +222,14 @@ namespace HelloWorldMessenger
 
         Context ctx = null;
         ListView dialogs = null;
+        bool justUpd = true;
 
-        public AsyncGetDialogsFromAPI(Context context, ListView dialogs)
+        public AsyncGetDialogsFromAPI(Context context, ListView dialogs, bool justUpd = true)
         {
             ctx = context;
             this.dialogs = dialogs;
             items = new List<DialogData>();
+            this.justUpd = justUpd;
         }
 
 
@@ -228,24 +238,48 @@ namespace HelloWorldMessenger
 
             if (HelpersAPI.Online)
             {
+                //не продумано удаление диалогов и добавление и получение списка диалогов из базы асинхронно !!!!!!!!!!!!!!!!!!!1
+                justUpd = false;
 
-                //получение диалогов из апи
-                JsonValue jsonItems = HelpersAPI.RequestToAPI("dialog/show");
-
-                if (jsonItems.JsonType == JsonType.Array || !jsonItems.ContainsKey("status"))
+                if (justUpd)
                 {
-                    foreach (JsonValue item in jsonItems)
+                    ////получение диалогов из апи
+                    //JsonValue jsonItems = HelpersAPI.RequestToAPI("dialog/check");
+
+                    //if (jsonItems.JsonType == JsonType.Array || !jsonItems.ContainsKey("status"))
+                    //{
+                    //    foreach (JsonValue item in jsonItems)
+                    //    {
+                    //        items.Add(new DialogData(item["dialog_id"], item["name"], "", item["time"], item["new"] == 1));
+                    //    }
+
+                    //    //обновление диалогов из апи в базе
+                    //    HelpersDB.UpdDialogs(items);
+                    //    //берем все диалоги из базы
+                    //    items = new List<DialogData>(HelpersDB.GetDialogs(HelpersAPI.MyLogin));
+
+                    //}
+                }
+                else
+                {
+                    //получение диалогов из апи
+                    JsonValue jsonItems2 = HelpersAPI.RequestToAPI("dialog/show");
+
+                    if (jsonItems2.JsonType == JsonType.Array || !jsonItems2.ContainsKey("status"))
                     {
-                        items.Add(new DialogData(item["dialog_id"], item["name"], item["users"], item["time"], item["new"] == 1));
+                        foreach (JsonValue item in jsonItems2)
+                        {
+                            items.Add(new DialogData(item["dialog_id"], item["name"], item["users"], item["time"], item["new"] == 1));
+                        }
+
+                        //очистка списка диалогов и добавление диалогов из апи
+                        HelpersDB.DeleteDialogs(HelpersAPI.MyLogin);
+                        HelpersDB.PutDialogs(items, HelpersAPI.MyLogin);
+
                     }
-
-                    //очистка списка диалогов и добавление диалогов из апи
-                    HelpersDB.DeleteDialogs(HelpersAPI.MyLogin);
-                    HelpersDB.PutDialogs(items, HelpersAPI.MyLogin);
-
                 }
 
-                HelpersAPI.NeedCheckInBackground = false;
+
 
             }
 
@@ -256,7 +290,7 @@ namespace HelloWorldMessenger
         {
             base.OnPostExecute(result);
 
-            dialogs.Adapter = new DialogsAdapter(ctx, items);
+            if (items.Count>0) dialogs.Adapter = new DialogsAdapter(ctx, items);
 
         }
     }
@@ -279,8 +313,8 @@ namespace HelloWorldMessenger
         {
 
             //запускаем обращение к апи в отдельном потоке
-            AsyncGetDialogsFromAPI async1 = new AsyncGetDialogsFromAPI(ctx, dialogs);
-            async1.Execute();
+            AsyncGetDialogsFromAPI async = new AsyncGetDialogsFromAPI(ctx, dialogs);
+            async.Execute();
         }
     }
 }

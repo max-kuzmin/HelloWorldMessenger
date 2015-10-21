@@ -106,6 +106,8 @@ namespace HelloWorldMessenger
                 return;
             }
 
+            HelpersAPI.NeedCheckInBackground = false;
+
             //обработчики
             Button send = FindViewById<Button>(Resource.Id.SendMessageButton);
             send.Click += Send_Click;
@@ -134,6 +136,7 @@ namespace HelloWorldMessenger
 
 
         }
+
 
         private void Send_Click(object sender, EventArgs e)
         {
@@ -362,8 +365,6 @@ namespace HelloWorldMessenger
                 //добавляем сообщения с сервера в БД
                 HelpersDB.PutMessages(itemsFromAPI, dialog_id);
                 items.AddRange(itemsFromAPI);
-
-                HelpersAPI.NeedCheckInBackground = false;
             }
 
 
