@@ -242,7 +242,7 @@ namespace HelloWorldMessenger
                 justUpd = false;
 
                 if (justUpd)
-                {
+                { 
                     ////получение диалогов из апи
                     //JsonValue jsonItems = HelpersAPI.RequestToAPI("dialog/check");
 
