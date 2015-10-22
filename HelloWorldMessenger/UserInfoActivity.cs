@@ -36,7 +36,7 @@ namespace HelloWorldMessenger
         {
             if (HelpersAPI.Online)
             {
-                string login = FindViewById<EditText>(Resource.Id.LoginField).Text;
+                string login = FindViewById<TextView>(Resource.Id.LoginField).Text;
                 string param = "dialog/add?login=" + login;
                 JsonValue result = HelpersAPI.RequestToAPI(param);
 
@@ -68,9 +68,9 @@ namespace HelloWorldMessenger
                 if (userData.ContainsKey("login"))
                 {
 
-                    EditText login = FindViewById<EditText>(Resource.Id.LoginField);
-                    EditText name = FindViewById<EditText>(Resource.Id.NameField);
-                    EditText info = FindViewById<EditText>(Resource.Id.InfoField);
+                    TextView login = FindViewById<TextView>(Resource.Id.LoginField);
+                    TextView name = FindViewById<TextView>(Resource.Id.NameField);
+                    TextView info = FindViewById<TextView>(Resource.Id.InfoField);
 
                     login.Text = userData["login"];
                     name.Text = userData["name"];

@@ -75,8 +75,8 @@ namespace HelloWorldMessenger
 			// aapt resource value: 0x7f05001a
 			public const int ChangeMyInfoButton = 2131034138;
 			
-			// aapt resource value: 0x7f050026
-			public const int CreateDialogButton = 2131034150;
+			// aapt resource value: 0x7f050027
+			public const int CreateDialogButton = 2131034151;
 			
 			// aapt resource value: 0x7f050019
 			public const int DeleteDialogMenuButton = 2131034137;
@@ -171,20 +171,23 @@ namespace HelloWorldMessenger
 			// aapt resource value: 0x7f050025
 			public const int SingInButton = 2131034149;
 			
-			// aapt resource value: 0x7f050027
-			public const int UserListItem = 2131034151;
-			
 			// aapt resource value: 0x7f050028
-			public const int UserLoginListItem = 2131034152;
+			public const int UserListItem = 2131034152;
 			
 			// aapt resource value: 0x7f050029
-			public const int UserNameListItem = 2131034153;
+			public const int UserLoginListItem = 2131034153;
+			
+			// aapt resource value: 0x7f05002a
+			public const int UserNameListItem = 2131034154;
 			
 			// aapt resource value: 0x7f050000
 			public const int linearLayout1 = 2131034112;
 			
 			// aapt resource value: 0x7f05000a
 			public const int linearLayout2 = 2131034122;
+			
+			// aapt resource value: 0x7f050026
+			public const int textView1 = 2131034150;
 			
 			static Id()
 			{
