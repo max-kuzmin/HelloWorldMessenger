@@ -81,11 +81,8 @@ namespace HelloWorldMessenger
 
             //проверка диалогов каждые 10 сек
             t = new Timer();
-            t.ScheduleAtFixedRate(new UpdDialogsTimerTask(this, dialogs), HelpersAPI.UpdInterval, HelpersAPI.UpdInterval);
+            t.ScheduleAtFixedRate(new UpdDialogsTimerTask(this, dialogs), 0, HelpersAPI.UpdInterval);
 
-            //запускаем обращение к апи в отдельном потоке
-            AsyncGetDialogsFromAPI async = new AsyncGetDialogsFromAPI(this, dialogs, false);
-            async.Execute();
 
 
         }
@@ -108,6 +105,7 @@ namespace HelloWorldMessenger
         protected override void OnPause()
         {
             base.OnPause();
+            t.Cancel();
             HelpersAPI.NeedCheckInBackground = true;
         }
     }
@@ -163,21 +161,23 @@ namespace HelloWorldMessenger
             if (view == null)
             {
                 view = View.Inflate(ctx, Resource.Layout.DialogListItem, null);
+
             }
 
+                //задаем данные в лэйауте
+                view.FindViewById<TextView>(Resource.Id.DialogNameListItem).Text = list.ElementAt(position).Name;
+                view.FindViewById<TextView>(Resource.Id.DialogMembersListItem).Text = list.ElementAt(position).Members;
 
-            //задаем данные в лэйауте
-            view.FindViewById<TextView>(Resource.Id.DialogNameListItem).Text = list.ElementAt(position).Name;
-            view.FindViewById<TextView>(Resource.Id.DialogMembersListItem).Text = list.ElementAt(position).Members;
+                DateTime date = HelpersAPI.FromUnixTime(list.ElementAt(position).Time);
 
-            DateTime date = HelpersAPI.FromUnixTime(list.ElementAt(position).Time);
+                view.FindViewById<TextView>(Resource.Id.DialogTimeListItem).Text = date.ToString("HH:mm:ss dd.MM");
 
-            view.FindViewById<TextView>(Resource.Id.DialogTimeListItem).Text = date.ToString("HH:mm:ss dd.MM");
-
-            if (list.ElementAt(position).IsNew)
-            {
-                view.FindViewById<LinearLayout>(Resource.Id.DialogListItem).SetBackgroundColor(Color.LightGray); 
-            }
+                if (list.ElementAt(position).IsNew)
+                {
+                    view.FindViewById<LinearLayout>(Resource.Id.DialogItemBackground).SetBackgroundColor(Color.LightGray);
+                    view.FindViewById<TextView>(Resource.Id.DialogTimeListItem).SetTextColor(Color.Black);
+                }
+            
 
             return view;
         }
@@ -222,14 +222,12 @@ namespace HelloWorldMessenger
 
         Context ctx = null;
         ListView dialogs = null;
-        bool justUpd = true;
 
-        public AsyncGetDialogsFromAPI(Context context, ListView dialogs, bool justUpd = true)
+        public AsyncGetDialogsFromAPI(Context context, ListView dialogs)
         {
             ctx = context;
             this.dialogs = dialogs;
             items = new List<DialogData>();
-            this.justUpd = justUpd;
         }
 
 
@@ -238,30 +236,7 @@ namespace HelloWorldMessenger
 
             if (HelpersAPI.Online)
             {
-                //не продумано удаление диалогов и добавление и получение списка диалогов из базы асинхронно !!!!!!!!!!!!!!!!!!!1
-                justUpd = false;
-
-                if (justUpd)
-                { 
-                    ////получение диалогов из апи
-                    //JsonValue jsonItems = HelpersAPI.RequestToAPI("dialog/check");
-
-                    //if (jsonItems.JsonType == JsonType.Array || !jsonItems.ContainsKey("status"))
-                    //{
-                    //    foreach (JsonValue item in jsonItems)
-                    //    {
-                    //        items.Add(new DialogData(item["dialog_id"], item["name"], "", item["time"], item["new"] == 1));
-                    //    }
-
-                    //    //обновление диалогов из апи в базе
-                    //    HelpersDB.UpdDialogs(items);
-                    //    //берем все диалоги из базы
-                    //    items = new List<DialogData>(HelpersDB.GetDialogs(HelpersAPI.MyLogin));
-
-                    //}
-                }
-                else
-                {
+                
                     //получение диалогов из апи
                     JsonValue jsonItems2 = HelpersAPI.RequestToAPI("dialog/show");
 
@@ -279,10 +254,6 @@ namespace HelloWorldMessenger
                     }
                 }
 
-
-
-            }
-
             return null;
         }
 
@@ -290,7 +261,7 @@ namespace HelloWorldMessenger
         {
             base.OnPostExecute(result);
 
-            if (items.Count>0) dialogs.Adapter = new DialogsAdapter(ctx, items);
+            dialogs.Adapter = new DialogsAdapter(ctx, items);
 
         }
     }

@@ -11,7 +11,7 @@ using System.IO;
 
 namespace HelloWorldMessenger
 {
-    [Activity(MainLauncher = true, Icon = "@drawable/icon", Theme = "@android:style/Theme.Holo.Light.NoActionBar")]
+    [Activity(MainLauncher = true, Icon = "@drawable/icon", Theme = "@android:style/Theme.Holo.Light.NoActionBar", WindowSoftInputMode = SoftInput.AdjustPan)]
     public class SingInActivity : Activity
     {
 

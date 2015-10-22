@@ -4,29 +4,52 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:id="@+id/DialogListItem"
-    android:paddingTop="10dp">
+    android:paddingTop="8dp"
+    android:paddingRight="8dp"
+    android:paddingLeft="8dp"
+    android:paddingBottom="8dp"
+    android:background="@android:drawable/dialog_holo_light_frame">
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="32.5dp"
-        android:id="@+id/linearLayout1">
+        android:layout_height="wrap_content"
+        android:id="@+id/DialogItemBackground"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp">
         <TextView
-            android:text="Medium Text"
+            android:text="Name"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/DialogNameListItem"
-            android:layout_width="192.4dp"
-            android:layout_height="31.4dp" />
-        <TextView
-            android:text="Small Text"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:id="@+id/DialogMembersListItem"
-            android:layout_width="183.6dp"
-            android:layout_height="31.4dp" />
+            android:layout_width="204.6dp"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:gravity="center_vertical"
+            android:paddingLeft="5dp"
+            android:layout_gravity="center_vertical" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp">
+            <TextView
+                android:text="Users"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:id="@+id/DialogMembersListItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:paddingLeft="5dp" />
+            <TextView
+                android:text="time"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="22.5dp"
+                android:id="@+id/DialogTimeListItem"
+                android:textColor="@android:color/secondary_text_dark"
+                android:paddingLeft="5dp" />
+        </LinearLayout>
     </LinearLayout>
-    <TextView
-        android:text="Small Text"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_width="match_parent"
-        android:layout_height="22.5dp"
-        android:id="@+id/DialogTimeListItem" />
 </LinearLayout>

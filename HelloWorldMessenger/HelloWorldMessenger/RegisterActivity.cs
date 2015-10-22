@@ -13,7 +13,7 @@ using System.Json;
 
 namespace HelloWorldMessenger
 {
-    [Activity(Theme = "@android:style/Theme.Holo.Light.NoActionBar")]
+    [Activity(Theme = "@android:style/Theme.Holo.Light.NoActionBar", WindowSoftInputMode = SoftInput.AdjustPan)]
     public class RegisterActivity : Activity
     {
         protected override void OnCreate(Bundle bundle)
