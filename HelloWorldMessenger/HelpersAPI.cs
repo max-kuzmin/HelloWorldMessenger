@@ -14,16 +14,15 @@ using Android.Widget;
 using System.Net;
 using System.IO;
 using Android.Net;
+using Java.Net;
 
 namespace HelloWorldMessenger
 {
     public class HelpersAPI
     {
 
-        //doto картинки аватарки, красивости для всего, сделать чтобы при ввобде все поднималось вверх
-        //проверить не чекать логин в каждом активити, обновление сообщений и диалогов
-        //dialogsactivity перезапускается хз почему, сервис не всегда срабатывает
-        //останавливать таймеры при паузе приложения и задавать флаг для сервиса в самом активити а не в асинхр
+        //doto картинки аватарки и в сообщениях, диалоги нескольких пользователей
+        //userinfo userlistitem доделать
 
         //static string server = "http://169.254.80.80/HelloWorldAPI/";
         //static string CookieDomain = "169.254.80.80";
@@ -88,7 +87,10 @@ namespace HelloWorldMessenger
                 if (netInfo == null || !netInfo.IsConnected) throw new Exception();
 
                 //запрос к апи
+                //param = URLEncoder.Encode(param);
+                //param = param.Replace("%2F", "/").Replace("%3F", "?").Replace("%3D", "=").Replace("%26", "&").Replace("%2523", "#");
                 System.Uri address = new System.Uri(new System.Uri(Server), param);
+                
                 HttpWebRequest req = new HttpWebRequest(address);
                 req.CookieContainer = GetCookieFromSetting();
                 req.Timeout = 60000;

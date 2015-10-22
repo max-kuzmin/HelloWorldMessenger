@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="Hello">Hello World, Click Me!</string>
-    <string name="ApplicationName">HelloWorldMessenger</string>
+  
+  
+    <string name="ApplicationName">HelloWorld Messenger</string>
     <string name="AppName1">HelloWorld</string>
     <string name="AppName2">messenger</string>
   <string name="Login">Login</string>

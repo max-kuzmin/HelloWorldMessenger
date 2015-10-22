@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:id="@+id/linearLayout1">
     <ImageView
-        android:src="@android:drawable/ic_menu_add"
+        android:src="@android:drawable/ic_menu_gallery"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:id="@+id/AvatarView"

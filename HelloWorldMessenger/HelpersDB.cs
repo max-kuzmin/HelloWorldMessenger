@@ -154,27 +154,5 @@ namespace HelloWorldMessenger
             }
         }
 
-
-
-        //обновить диалоги в БД -- не продумано удаление диалогов и добавление !!!!!!!!!!!!!!!!!!!!!!!!!
-        //public static void UpdDialogs(IEnumerable<DialogData> items)
-        //{
-        //    if (dbAsync == null) ConnectToDBAsync();
-        //    if (db == null) ConnectToDB();
-
-
-        //    foreach (DialogData item in items)
-        //    {
-        //        DialogsTable dialog = db.Table<DialogsTable>().First((m) => item.Id == m.Dialog_ID);
-        //        if (dialog == null) continue;
-        //        dialog.IsNew = item.IsNew;
-        //        dialog.Name = item.Name;
-        //        dialog.Time = item.Time;
-
-        //        dbAsync.UpdateAsync(dialog);
-        //    }
-
-
-        //}
     }
 }

@@ -15,7 +15,7 @@ using Java.Util;
 
 namespace HelloWorldMessenger
 {
-    [Activity(Theme = "@android:style/Theme.Holo.Light")]
+    [Activity(Theme = "@android:style/Theme.Holo.Light", WindowSoftInputMode = SoftInput.AdjustPan)]
     public class MessagesActivity : Activity
     {
 
@@ -29,6 +29,8 @@ namespace HelloWorldMessenger
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
+
+
 
             SetContentView(Resource.Layout.Messages);
             SetTitle(Resource.String.Messages);
@@ -145,7 +147,6 @@ namespace HelloWorldMessenger
                 //постим сообщение на сервер
                 EditText messageText = FindViewById<EditText>(Resource.Id.MessageField);
                 string param = "message/add?dialog_id=" + dialog_id + "&text=" + messageText.Text;
-                messageText.Text = "";
                 JsonValue result = HelpersAPI.RequestToAPI(param);
 
                 //получаем новые сообщения с сервера
@@ -163,7 +164,7 @@ namespace HelloWorldMessenger
         private void Messages_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
             //клик на сообщении
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
 
@@ -171,6 +172,7 @@ namespace HelloWorldMessenger
         {
             base.OnPause();
             HelpersAPI.NeedCheckInBackground = true;
+            t.Cancel();
         }
     }
 
@@ -235,21 +237,34 @@ namespace HelloWorldMessenger
             if (view == null)
             {
                 view = View.Inflate(ctx, Resource.Layout.MessageListItem, null);
-            }
 
+            }
 
             //присваиваем элементам значения
             view.FindViewById<TextView>(Resource.Id.MessageTextListItem).Text = list.ElementAt(position).Text;
 
             DateTime date = HelpersAPI.FromUnixTime(list.ElementAt(position).Time);
 
-            view.FindViewById<TextView>(Resource.Id.MessageTimeListItem).Text = date.ToString("HH:mm:ss dd.MM");
+            view.FindViewById<TextView>(Resource.Id.MessageLoginListItem).Text = list.ElementAt(position).Login + " on " + date.ToString("HH:mm:ss dd.MM");
 
             //настраиваем вид
             if (HelpersAPI.MyLogin == list.ElementAt(position).Login)
             {
                 view.FindViewById<TextView>(Resource.Id.MessageTextListItem).Gravity = GravityFlags.Right;
-                view.FindViewById<TextView>(Resource.Id.MessageTimeListItem).Gravity = GravityFlags.Right;
+                view.FindViewById<TextView>(Resource.Id.MessageLoginListItem).Gravity = GravityFlags.Right;
+                view.FindViewById<LinearLayout>(Resource.Id.MessageBackgroundLayout).SetGravity(GravityFlags.Right);
+
+                LinearLayout l = view.FindViewById<LinearLayout>(Resource.Id.MessageListItem);
+                l.SetPadding(100, l.PaddingTop, 3, l.PaddingBottom);
+            }
+            else
+            {
+                view.FindViewById<TextView>(Resource.Id.MessageTextListItem).Gravity = GravityFlags.Left;
+                view.FindViewById<TextView>(Resource.Id.MessageLoginListItem).Gravity = GravityFlags.Left;
+                view.FindViewById<LinearLayout>(Resource.Id.MessageBackgroundLayout).SetGravity(GravityFlags.Left);
+
+                LinearLayout l = view.FindViewById<LinearLayout>(Resource.Id.MessageListItem);
+                l.SetPadding(3, l.PaddingTop, 100, l.PaddingBottom);
             }
 
 
@@ -377,8 +392,11 @@ namespace HelloWorldMessenger
         {
             base.OnPostExecute(result);
 
-            (messages.Adapter as MessagesAdapter).AddItems(items);
-            messages.SetSelection(messages.Adapter.Count - 1);
+            if (items.Count > 0)
+            {
+                (messages.Adapter as MessagesAdapter).AddItems(items);
+                messages.SetSelection(messages.Adapter.Count - 1);
+            }
         }
     }
 

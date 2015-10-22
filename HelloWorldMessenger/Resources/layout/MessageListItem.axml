@@ -4,19 +4,39 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:id="@+id/MessageListItem"
-    android:paddingTop="10dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp">
-    <TextView
-        android:text="Medium Text"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/MessageTextListItem"
+    android:paddingTop="3dp"
+    android:paddingRight="100dp"
+    android:paddingLeft="3dp"
+    android:paddingBottom="3dp"
+    android:background="#DEDEDE">
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:text="Small Text"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_width="match_parent"
-        android:layout_height="22.5dp"
-        android:id="@+id/MessageTimeListItem" />
+        android:layout_height="wrap_content"
+        android:id="@+id/MessageBackgroundLayout"
+        android:background="@android:drawable/editbox_background_normal"
+        android:gravity="left">
+        <TextView
+            android:text="Text"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/MessageTextListItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="3dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:gravity="left" />
+        <TextView
+            android:text="login"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/MessageLoginListItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/secondary_text_dark"
+            android:paddingTop="3dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="3dp"
+            android:gravity="left" />
+    </LinearLayout>
 </LinearLayout>

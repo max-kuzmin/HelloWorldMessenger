@@ -60,68 +60,74 @@ namespace HelloWorldMessenger
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f05000c
-			public const int AddDialogButton = 2131034124;
+			// aapt resource value: 0x7f05000e
+			public const int AddDialogButton = 2131034126;
 			
-			// aapt resource value: 0x7f050020
-			public const int AppName1 = 2131034144;
+			// aapt resource value: 0x7f050023
+			public const int AppName1 = 2131034147;
 			
-			// aapt resource value: 0x7f050021
-			public const int AppName2 = 2131034145;
+			// aapt resource value: 0x7f050024
+			public const int AppName2 = 2131034148;
 			
 			// aapt resource value: 0x7f050001
 			public const int AvatarView = 2131034113;
 			
-			// aapt resource value: 0x7f050017
-			public const int ChangeMyInfoButton = 2131034135;
+			// aapt resource value: 0x7f05001a
+			public const int ChangeMyInfoButton = 2131034138;
 			
-			// aapt resource value: 0x7f050023
-			public const int CreateDialogButton = 2131034147;
+			// aapt resource value: 0x7f050026
+			public const int CreateDialogButton = 2131034150;
 			
-			// aapt resource value: 0x7f050016
-			public const int DeleteDialogMenuButton = 2131034134;
+			// aapt resource value: 0x7f050019
+			public const int DeleteDialogMenuButton = 2131034137;
+			
+			// aapt resource value: 0x7f050008
+			public const int DialogItemBackground = 2131034120;
 			
 			// aapt resource value: 0x7f050007
 			public const int DialogListItem = 2131034119;
 			
-			// aapt resource value: 0x7f050009
-			public const int DialogMembersListItem = 2131034121;
-			
-			// aapt resource value: 0x7f050008
-			public const int DialogNameListItem = 2131034120;
-			
-			// aapt resource value: 0x7f05000a
-			public const int DialogTimeListItem = 2131034122;
-			
 			// aapt resource value: 0x7f05000b
-			public const int DialogsList = 2131034123;
+			public const int DialogMembersListItem = 2131034123;
 			
-			// aapt resource value: 0x7f05001b
-			public const int EditName = 2131034139;
+			// aapt resource value: 0x7f050009
+			public const int DialogNameListItem = 2131034121;
+			
+			// aapt resource value: 0x7f05000c
+			public const int DialogTimeListItem = 2131034124;
+			
+			// aapt resource value: 0x7f05000d
+			public const int DialogsList = 2131034125;
+			
+			// aapt resource value: 0x7f05001e
+			public const int EditName = 2131034142;
 			
 			// aapt resource value: 0x7f050005
 			public const int InfoField = 2131034117;
 			
-			// aapt resource value: 0x7f050014
-			public const int LogOutMenuButton = 2131034132;
+			// aapt resource value: 0x7f050017
+			public const int LogOutMenuButton = 2131034135;
 			
-			// aapt resource value: 0x7f050018
-			public const int LoginField = 2131034136;
-			
-			// aapt resource value: 0x7f050011
-			public const int MessageField = 2131034129;
-			
-			// aapt resource value: 0x7f05000d
-			public const int MessageListItem = 2131034125;
-			
-			// aapt resource value: 0x7f05000e
-			public const int MessageTextListItem = 2131034126;
-			
-			// aapt resource value: 0x7f05000f
-			public const int MessageTimeListItem = 2131034127;
+			// aapt resource value: 0x7f05001b
+			public const int LoginField = 2131034139;
 			
 			// aapt resource value: 0x7f050010
-			public const int MessagesList = 2131034128;
+			public const int MessageBackgroundLayout = 2131034128;
+			
+			// aapt resource value: 0x7f050014
+			public const int MessageField = 2131034132;
+			
+			// aapt resource value: 0x7f05000f
+			public const int MessageListItem = 2131034127;
+			
+			// aapt resource value: 0x7f050012
+			public const int MessageLoginListItem = 2131034130;
+			
+			// aapt resource value: 0x7f050011
+			public const int MessageTextListItem = 2131034129;
+			
+			// aapt resource value: 0x7f050013
+			public const int MessagesList = 2131034131;
 			
 			// aapt resource value: 0x7f050004
 			public const int NameField = 2131034116;
@@ -129,53 +135,56 @@ namespace HelloWorldMessenger
 			// aapt resource value: 0x7f050003
 			public const int NewPassField = 2131034115;
 			
-			// aapt resource value: 0x7f05001c
-			public const int OkButton = 2131034140;
+			// aapt resource value: 0x7f05001f
+			public const int OkButton = 2131034143;
 			
 			// aapt resource value: 0x7f050002
 			public const int OldPassField = 2131034114;
 			
-			// aapt resource value: 0x7f050019
-			public const int PassField = 2131034137;
+			// aapt resource value: 0x7f05001c
+			public const int PassField = 2131034140;
 			
-			// aapt resource value: 0x7f05001a
-			public const int RegisterButton = 2131034138;
+			// aapt resource value: 0x7f05001d
+			public const int RegisterButton = 2131034141;
 			
-			// aapt resource value: 0x7f050015
-			public const int RenameDialogMenuButton = 2131034133;
+			// aapt resource value: 0x7f050018
+			public const int RenameDialogMenuButton = 2131034136;
 			
 			// aapt resource value: 0x7f050006
 			public const int SaveButton = 2131034118;
 			
-			// aapt resource value: 0x7f05001e
-			public const int SearchButton = 2131034142;
+			// aapt resource value: 0x7f050021
+			public const int SearchButton = 2131034145;
 			
-			// aapt resource value: 0x7f05001d
-			public const int SearchField = 2131034141;
-			
-			// aapt resource value: 0x7f05001f
-			public const int SearchUsersList = 2131034143;
-			
-			// aapt resource value: 0x7f050012
-			public const int SendMessageButton = 2131034130;
-			
-			// aapt resource value: 0x7f050013
-			public const int ShowMessagesMenuButton = 2131034131;
+			// aapt resource value: 0x7f050020
+			public const int SearchField = 2131034144;
 			
 			// aapt resource value: 0x7f050022
-			public const int SingInButton = 2131034146;
+			public const int SearchUsersList = 2131034146;
 			
-			// aapt resource value: 0x7f050024
-			public const int UserListItem = 2131034148;
+			// aapt resource value: 0x7f050015
+			public const int SendMessageButton = 2131034133;
+			
+			// aapt resource value: 0x7f050016
+			public const int ShowMessagesMenuButton = 2131034134;
 			
 			// aapt resource value: 0x7f050025
-			public const int UserLoginListItem = 2131034149;
+			public const int SingInButton = 2131034149;
 			
-			// aapt resource value: 0x7f050026
-			public const int UserNameListItem = 2131034150;
+			// aapt resource value: 0x7f050027
+			public const int UserListItem = 2131034151;
+			
+			// aapt resource value: 0x7f050028
+			public const int UserLoginListItem = 2131034152;
+			
+			// aapt resource value: 0x7f050029
+			public const int UserNameListItem = 2131034153;
 			
 			// aapt resource value: 0x7f050000
 			public const int linearLayout1 = 2131034112;
+			
+			// aapt resource value: 0x7f05000a
+			public const int linearLayout2 = 2131034122;
 			
 			static Id()
 			{
@@ -242,104 +251,101 @@ namespace HelloWorldMessenger
 		public partial class String
 		{
 			
-			// aapt resource value: 0x7f040002
-			public const int AppName1 = 2130968578;
-			
-			// aapt resource value: 0x7f040003
-			public const int AppName2 = 2130968579;
-			
 			// aapt resource value: 0x7f040001
-			public const int ApplicationName = 2130968577;
+			public const int AppName1 = 2130968577;
 			
-			// aapt resource value: 0x7f04001f
-			public const int ChangeMyInfo = 2130968607;
-			
-			// aapt resource value: 0x7f04000f
-			public const int CreateDialog = 2130968591;
-			
-			// aapt resource value: 0x7f040018
-			public const int DeleteDialog = 2130968600;
-			
-			// aapt resource value: 0x7f040009
-			public const int Dialogs = 2130968585;
-			
-			// aapt resource value: 0x7f04001a
-			public const int EnterName = 2130968602;
-			
-			// aapt resource value: 0x7f040020
-			public const int HasNewMessages = 2130968608;
+			// aapt resource value: 0x7f040002
+			public const int AppName2 = 2130968578;
 			
 			// aapt resource value: 0x7f040000
-			public const int Hello = 2130968576;
-			
-			// aapt resource value: 0x7f04000b
-			public const int Info = 2130968587;
-			
-			// aapt resource value: 0x7f040016
-			public const int LogOut = 2130968598;
-			
-			// aapt resource value: 0x7f040004
-			public const int Login = 2130968580;
-			
-			// aapt resource value: 0x7f040008
-			public const int LoginPassError = 2130968584;
-			
-			// aapt resource value: 0x7f040013
-			public const int Message = 2130968595;
-			
-			// aapt resource value: 0x7f040014
-			public const int Messages = 2130968596;
-			
-			// aapt resource value: 0x7f04000a
-			public const int Name = 2130968586;
-			
-			// aapt resource value: 0x7f04001d
-			public const int NewPassword = 2130968605;
-			
-			// aapt resource value: 0x7f04000e
-			public const int NoInternet = 2130968590;
-			
-			// aapt resource value: 0x7f040019
-			public const int Ok = 2130968601;
-			
-			// aapt resource value: 0x7f04001c
-			public const int OldPassword = 2130968604;
-			
-			// aapt resource value: 0x7f040005
-			public const int Password = 2130968581;
-			
-			// aapt resource value: 0x7f040011
-			public const int Query = 2130968593;
-			
-			// aapt resource value: 0x7f04000d
-			public const int RegComplete = 2130968589;
-			
-			// aapt resource value: 0x7f04000c
-			public const int RegError = 2130968588;
-			
-			// aapt resource value: 0x7f040007
-			public const int Register = 2130968583;
-			
-			// aapt resource value: 0x7f040017
-			public const int RenameDialog = 2130968599;
-			
-			// aapt resource value: 0x7f04001b
-			public const int Save = 2130968603;
+			public const int ApplicationName = 2130968576;
 			
 			// aapt resource value: 0x7f04001e
-			public const int SaveError = 2130968606;
+			public const int ChangeMyInfo = 2130968606;
 			
-			// aapt resource value: 0x7f040010
-			public const int Search = 2130968592;
+			// aapt resource value: 0x7f04000e
+			public const int CreateDialog = 2130968590;
 			
-			// aapt resource value: 0x7f040012
-			public const int SendMessage = 2130968594;
+			// aapt resource value: 0x7f040017
+			public const int DeleteDialog = 2130968599;
+			
+			// aapt resource value: 0x7f040008
+			public const int Dialogs = 2130968584;
+			
+			// aapt resource value: 0x7f040019
+			public const int EnterName = 2130968601;
+			
+			// aapt resource value: 0x7f04001f
+			public const int HasNewMessages = 2130968607;
+			
+			// aapt resource value: 0x7f04000a
+			public const int Info = 2130968586;
 			
 			// aapt resource value: 0x7f040015
-			public const int ShowMenu = 2130968597;
+			public const int LogOut = 2130968597;
+			
+			// aapt resource value: 0x7f040003
+			public const int Login = 2130968579;
+			
+			// aapt resource value: 0x7f040007
+			public const int LoginPassError = 2130968583;
+			
+			// aapt resource value: 0x7f040012
+			public const int Message = 2130968594;
+			
+			// aapt resource value: 0x7f040013
+			public const int Messages = 2130968595;
+			
+			// aapt resource value: 0x7f040009
+			public const int Name = 2130968585;
+			
+			// aapt resource value: 0x7f04001c
+			public const int NewPassword = 2130968604;
+			
+			// aapt resource value: 0x7f04000d
+			public const int NoInternet = 2130968589;
+			
+			// aapt resource value: 0x7f040018
+			public const int Ok = 2130968600;
+			
+			// aapt resource value: 0x7f04001b
+			public const int OldPassword = 2130968603;
+			
+			// aapt resource value: 0x7f040004
+			public const int Password = 2130968580;
+			
+			// aapt resource value: 0x7f040010
+			public const int Query = 2130968592;
+			
+			// aapt resource value: 0x7f04000c
+			public const int RegComplete = 2130968588;
+			
+			// aapt resource value: 0x7f04000b
+			public const int RegError = 2130968587;
 			
 			// aapt resource value: 0x7f040006
-			public const int SingIn = 2130968582;
+			public const int Register = 2130968582;
+			
+			// aapt resource value: 0x7f040016
+			public const int RenameDialog = 2130968598;
+			
+			// aapt resource value: 0x7f04001a
+			public const int Save = 2130968602;
+			
+			// aapt resource value: 0x7f04001d
+			public const int SaveError = 2130968605;
+			
+			// aapt resource value: 0x7f04000f
+			public const int Search = 2130968591;
+			
+			// aapt resource value: 0x7f040011
+			public const int SendMessage = 2130968593;
+			
+			// aapt resource value: 0x7f040014
+			public const int ShowMenu = 2130968596;
+			
+			// aapt resource value: 0x7f040005
+			public const int SingIn = 2130968581;
 			
 			static String()
 			{
