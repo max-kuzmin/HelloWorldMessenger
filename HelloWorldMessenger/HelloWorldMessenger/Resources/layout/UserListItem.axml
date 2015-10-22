@@ -4,17 +4,23 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:id="@+id/UserListItem"
-    android:paddingTop="10dp">
+    android:paddingTop="5dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingBottom="5dp"
+    android:background="@android:drawable/editbox_dropdown_light_frame">
     <TextView
-        android:text="Medium Text"
+        android:text="Login"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/UserLoginListItem"
-        android:layout_width="192.4dp"
-        android:layout_height="31.4dp" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
     <TextView
-        android:text="Small Text"
+        android:text="Name"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:id="@+id/UserNameListItem"
-        android:layout_width="183.6dp"
-        android:layout_height="31.4dp" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp" />
 </LinearLayout>
