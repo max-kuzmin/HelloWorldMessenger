@@ -7,12 +7,13 @@
         android:minWidth="25px"
         android:minHeight="25px"
         android:layout_width="match_parent"
-        android:layout_height="475dp"
-        android:id="@+id/MessagesList" />
+        android:layout_height="410.1dp"
+        android:id="@+id/MessagesList"
+        android:layout_weight="1" />
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="68.0dp"
         android:id="@+id/linearLayout1"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"

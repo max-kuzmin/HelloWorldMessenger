@@ -22,7 +22,6 @@ namespace HelloWorldMessenger
     {
 
         //doto картинки аватарки и в сообщениях, диалоги нескольких пользователей
-        //userinfo userlistitem доделать
 
         //static string server = "http://169.254.80.80/HelloWorldAPI/";
         //static string CookieDomain = "169.254.80.80";
