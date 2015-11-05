@@ -43,6 +43,19 @@ namespace HelloWorldMessenger
         }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
         public override bool OnCreateOptionsMenu(IMenu menu)
         {
             MenuInflater.Inflate(Resource.Layout.MessagesMenu, menu);
@@ -164,7 +177,14 @@ namespace HelloWorldMessenger
         private void Messages_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
             //клик на сообщении
-            //throw new NotImplementedException();
+            if (HelpersAPI.Online)
+            {
+                string login = ((MessageData)messages.Adapter.GetItem(e.Position)).Login;
+                Intent intent = new Intent(this, typeof(UserInfoActivity));
+                intent.PutExtra("login", login);
+                intent.PutExtra("isAddDialog", false);
+                StartActivity(intent);
+            }
         }
 
 
@@ -334,71 +354,6 @@ namespace HelloWorldMessenger
     }
 
 
-
-
-    //асинхронное получение сообщений из апи
-    public class AsyncGetMessagesFromAPI : AsyncTask
-    {
-        Context ctx = null;
-        ListView messages = null;
-        List<MessageData> items;
-        long dialog_id = 0;
-        long lastTime = 0;
-
-        public AsyncGetMessagesFromAPI(Context context, ListView messages, long dialog_id)
-        {
-            ctx = context;
-            this.messages = messages;
-            items = new List<MessageData>();
-            this.dialog_id = dialog_id;
-
-            if (messages.Adapter.Count > 0) lastTime = ((MessageData)messages.Adapter.GetItem(messages.Adapter.Count - 1)).Time;
-        }
-
-
-        protected override Java.Lang.Object DoInBackground(params Java.Lang.Object[] @params)
-        {
-
-            if (HelpersAPI.Online)
-            {
-
-                //запрос на сервер за новыми сообщени€ми
-                List<MessageData> itemsFromAPI = new List<MessageData>();
-
-                string param = "message/show?dialog_id=" + dialog_id + "&time=" + lastTime;
-                JsonValue jsonItems = HelpersAPI.RequestToAPI(param);
-
-                if (jsonItems.JsonType == JsonType.Array || !jsonItems.ContainsKey("status"))
-                {
-                    foreach (JsonValue item in jsonItems)
-                    {
-                        itemsFromAPI.Add(new MessageData(item["message_id"], item["text"], item["login"], item["time"]));
-                    }
-
-                }
-
-                //добавл€ем сообщени€ с сервера в Ѕƒ
-                HelpersDB.PutMessages(itemsFromAPI, dialog_id);
-                items.AddRange(itemsFromAPI);
-            }
-
-
-            return null;
-
-
-        }
-
-        protected override void OnPostExecute(Java.Lang.Object result)
-        {
-            base.OnPostExecute(result);
-
-            if (items.Count > 0)
-            {
-                (messages.Adapter as MessagesAdapter).AddItems(items);
-                messages.SetSelection(messages.Adapter.Count - 1);
-            }
-        }
-    }
 
 
     //событие дл€ таймера обновлени€ сообщений

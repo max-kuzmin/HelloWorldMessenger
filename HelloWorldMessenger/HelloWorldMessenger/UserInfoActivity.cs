@@ -26,9 +26,23 @@ namespace HelloWorldMessenger
             SetContentView(Resource.Layout.UserInfo);
 
             Button addDialog = FindViewById<Button>(Resource.Id.CreateDialogButton);
-            addDialog.Click += AddDialog_Click;
+
+
+            if (!Intent.GetBooleanExtra("isAddDialog", true))
+            {
+                addDialog.Visibility = ViewStates.Invisible;
+            }
+            else
+            {
+                addDialog.Click += AddDialog_Click;
+            }
 
             userLogin = Intent.GetStringExtra("login");
+
+
+
+            AsyncGetAvatar task = new AsyncGetAvatar(FindViewById<ImageView>(Resource.Id.AvatarView), userLogin);
+            task.Execute();
         }
 
         //добавление диалогов

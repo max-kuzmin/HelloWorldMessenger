@@ -71,6 +71,7 @@ namespace HelloWorldMessenger
                 string login = ((User)adapter.GetItem(e.Position)).Login;
                 Intent intent = new Intent(this, typeof(UserInfoActivity));
                 intent.PutExtra("login", login);
+                intent.PutExtra("isAddDialog", true);
                 StartActivity(intent);
             }
         }

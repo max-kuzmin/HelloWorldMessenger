@@ -214,57 +214,7 @@ namespace HelloWorldMessenger
 }
 
 
-    //асинхронный запрос к апи
-    public class AsyncGetDialogsFromAPI : AsyncTask
-    {
-
-        List<DialogData> items;
-
-        Context ctx = null;
-        ListView dialogs = null;
-
-        public AsyncGetDialogsFromAPI(Context context, ListView dialogs)
-        {
-            ctx = context;
-            this.dialogs = dialogs;
-            items = new List<DialogData>();
-        }
-
-
-        protected override Java.Lang.Object DoInBackground(params Java.Lang.Object[] @params)
-        {
-
-            if (HelpersAPI.Online)
-            {
-                
-                    //получение диалогов из апи
-                    JsonValue jsonItems2 = HelpersAPI.RequestToAPI("dialog/show");
-
-                    if (jsonItems2.JsonType == JsonType.Array || !jsonItems2.ContainsKey("status"))
-                    {
-                        foreach (JsonValue item in jsonItems2)
-                        {
-                            items.Add(new DialogData(item["dialog_id"], item["name"], item["users"], item["time"], item["new"] == 1));
-                        }
-
-                        //очистка списка диалогов и добавление диалогов из апи
-                        HelpersDB.DeleteDialogs(HelpersAPI.MyLogin);
-                        HelpersDB.PutDialogs(items, HelpersAPI.MyLogin);
-
-                    }
-                }
-
-            return null;
-        }
-
-        protected override void OnPostExecute(Java.Lang.Object result)
-        {
-            base.OnPostExecute(result);
-
-            dialogs.Adapter = new DialogsAdapter(ctx, items);
-
-        }
-    }
+    
 
     //событие таймера для обновления списка диалогов
     public class UpdDialogsTimerTask : TimerTask

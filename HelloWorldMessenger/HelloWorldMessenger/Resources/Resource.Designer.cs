@@ -47,6 +47,9 @@ namespace HelloWorldMessenger
 			// aapt resource value: 0x7f020000
 			public const int Icon = 2130837504;
 			
+			// aapt resource value: 0x7f020001
+			public const int q123 = 2130837505;
+			
 			static Drawable()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
@@ -340,6 +343,9 @@ namespace HelloWorldMessenger
 			
 			// aapt resource value: 0x7f04000f
 			public const int Search = 2130968591;
+			
+			// aapt resource value: 0x7f040020
+			public const int SelectPicture = 2130968608;
 			
 			// aapt resource value: 0x7f040011
 			public const int SendMessage = 2130968593;
