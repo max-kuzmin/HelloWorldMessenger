@@ -15,13 +15,15 @@ using System.Net;
 using System.IO;
 using Android.Net;
 using Java.Net;
+using Android.Media;
+using Android.Graphics;
 
 namespace HelloWorldMessenger
 {
     public class HelpersAPI
     {
 
-        //doto картинки аватарки и в сообщениях, диалоги нескольких пользователей
+        //doto картинки в сообщениях, диалоги нескольких пользователей
 
         //static string server = "http://169.254.80.80/HelloWorldAPI/";
         //static string CookieDomain = "169.254.80.80";
@@ -29,10 +31,13 @@ namespace HelloWorldMessenger
         static string server = "http://api-maxgsomgsom.rhcloud.com/";
         static string CookieDomain = "api-maxgsomgsom.rhcloud.com";
 
+        static bool testMode = false;
+
         static string myLogin = "";
         static bool online = true;
 
         static int updInterval = 10000;
+        static int timeout = 5000;
 
 
         public static bool NeedCheckInBackground { get; set; }
@@ -83,16 +88,19 @@ namespace HelloWorldMessenger
                 //проверка на подключение к сети
                 ConnectivityManager conMgr = (ConnectivityManager)Application.Context.GetSystemService(Context.ConnectivityService);
                 NetworkInfo netInfo = conMgr.ActiveNetworkInfo;
-                if (netInfo == null || !netInfo.IsConnected) throw new Exception();
+                if (!testMode && (netInfo == null || !netInfo.IsConnected)) throw new Exception();
+
+
+                //param = URLEncoder.Encode(param, "WINDOWS-1251");
+                //param = param.Replace("%2F", "/").Replace("%3F", "?").Replace("%3D", "=").Replace("%26", "&").Replace("%2523", "#");
+
 
                 //запрос к апи
-                //param = URLEncoder.Encode(param);
-                //param = param.Replace("%2F", "/").Replace("%3F", "?").Replace("%3D", "=").Replace("%26", "&").Replace("%2523", "#");
                 System.Uri address = new System.Uri(new System.Uri(Server), param);
                 
                 HttpWebRequest req = new HttpWebRequest(address);
                 req.CookieContainer = GetCookieFromSetting();
-                req.Timeout = 60000;
+                req.Timeout = timeout;
                 HttpWebResponse res = (HttpWebResponse)req.GetResponse();
                 StreamReader reader = new StreamReader(res.GetResponseStream());
 
@@ -111,6 +119,115 @@ namespace HelloWorldMessenger
                 json = JsonValue.Parse("{\"status\":\"offline\"}");
                 online = false;
 
+                authOnlineChecked = false;
+
+                ISharedPreferences prefs = Application.Context.GetSharedPreferences("Setting", FileCreationMode.Private);
+
+                Toast.MakeText(Application.Context, Resource.String.NoInternet, ToastLength.Long).Show();
+            }
+
+            return json;
+
+        }
+
+
+
+        public static Bitmap GetImageFromAPI(string login=null)
+        {
+            Bitmap img = null;
+
+            try
+            {
+                //проверка на подключение к сети
+                ConnectivityManager conMgr = (ConnectivityManager)Application.Context.GetSystemService(Context.ConnectivityService);
+                NetworkInfo netInfo = conMgr.ActiveNetworkInfo;
+                if (!testMode && (netInfo == null || !netInfo.IsConnected)) throw new Exception();
+
+                string param = "avatar/show";
+                if (login != null) param += "?login=" + login;
+
+                //запрос к апи
+                System.Uri address = new System.Uri(new System.Uri(Server), param);
+
+                HttpWebRequest req = new HttpWebRequest(address);
+                req.CookieContainer = GetCookieFromSetting();
+                req.Timeout = timeout;
+                HttpWebResponse res = (HttpWebResponse)req.GetResponse();
+
+                try
+                {
+                    img = BitmapFactory.DecodeStream(res.GetResponseStream());
+                }
+                catch { }
+
+                res.Close();
+
+                online = true;
+            }
+            catch
+            {
+                //если ошибка запроса - нет инета
+                online = false;
+                authOnlineChecked = false;
+
+                ISharedPreferences prefs = Application.Context.GetSharedPreferences("Setting", FileCreationMode.Private);
+
+                Toast.MakeText(Application.Context, Resource.String.NoInternet, ToastLength.Long).Show();
+            }
+
+            return img;
+
+        }
+
+
+
+
+
+
+        public static JsonValue PutImageToAPI(Bitmap img, string login = null)
+        {
+            JsonValue json = null;
+
+            try
+            {
+                //проверка на подключение к сети
+                ConnectivityManager conMgr = (ConnectivityManager)Application.Context.GetSystemService(Context.ConnectivityService);
+                NetworkInfo netInfo = conMgr.ActiveNetworkInfo;
+                if (!testMode && (netInfo == null || !netInfo.IsConnected)) throw new Exception();
+
+                //путь
+                string param = "avatar/upload";
+                System.Uri address = new System.Uri(new System.Uri(Server), param);
+
+                //параметры запроса
+                HttpWebRequest req = new HttpWebRequest(address);
+                req.CookieContainer = GetCookieFromSetting();
+                req.Timeout = timeout;
+                req.Method = "POST";
+                req.ContentType = "image/jpeg";
+
+                //получаем и конвертируем изображение
+                MemoryStream memory = new MemoryStream();
+                
+                img.Compress(Bitmap.CompressFormat.Jpeg, 90, memory);
+                byte[] imgBytes = memory.ToArray();
+                BinaryWriter writer = new BinaryWriter(req.GetRequestStream());
+                writer.Write(imgBytes);
+                
+                HttpWebResponse res = (HttpWebResponse)req.GetResponse();
+                StreamReader reader = new StreamReader(res.GetResponseStream());
+
+                string resText = reader.ReadToEnd();
+                json = JsonValue.Parse(resText);
+
+                res.Close();
+
+                online = true;
+            }
+            catch
+            {
+                //если ошибка запроса - нет инета
+                online = false;
                 authOnlineChecked = false;
 
                 ISharedPreferences prefs = Application.Context.GetSharedPreferences("Setting", FileCreationMode.Private);
@@ -163,14 +280,14 @@ namespace HelloWorldMessenger
                     //проверка на подключение к сети
                     ConnectivityManager conMgr = (ConnectivityManager)Application.Context.GetSystemService(Context.ConnectivityService);
                     NetworkInfo netInfo = conMgr.ActiveNetworkInfo;
-                    if (netInfo == null || !netInfo.IsConnected) throw new Exception();
+                    if (!testMode && (netInfo == null || !netInfo.IsConnected)) throw new Exception();
 
                     //запрос
                     string param = "login?login=" + login + "&pass=" + pass;
 
                     System.Uri address = new System.Uri(new System.Uri(Server), param);
                     HttpWebRequest req = new HttpWebRequest(address);
-                    req.Timeout = 60000;
+                    req.Timeout = timeout;
                     HttpWebResponse res = (HttpWebResponse)req.GetResponse();
                     StreamReader reader = new StreamReader(res.GetResponseStream());
                     string resText = reader.ReadToEnd();
