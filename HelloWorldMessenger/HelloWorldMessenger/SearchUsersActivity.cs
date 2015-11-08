@@ -40,7 +40,7 @@ namespace HelloWorldMessenger
                 ListView usersList = FindViewById<ListView>(Resource.Id.SearchUsersList);
                 usersList.ItemClick += UsersList_ItemClick;
 
-                List<User> items = new List<User>();
+                List<UserData> items = new List<UserData>();
 
                 string query = FindViewById<EditText>(Resource.Id.SearchField).Text;
 
@@ -52,7 +52,7 @@ namespace HelloWorldMessenger
                     {
                         foreach (JsonValue item in jsonItems)
                         {
-                            items.Add(new User(item["name"], item["login"], item["info"]));
+                            items.Add(new UserData(item["name"], item["login"], item["info"]));
                         }
 
                     }
@@ -68,7 +68,7 @@ namespace HelloWorldMessenger
             //переход на страницу пользователя
             if (HelpersAPI.Online)
             {
-                string login = ((User)adapter.GetItem(e.Position)).Login;
+                string login = ((UserData)adapter.GetItem(e.Position)).Login;
                 Intent intent = new Intent(this, typeof(UserInfoActivity));
                 intent.PutExtra("login", login);
                 intent.PutExtra("isAddDialog", true);
@@ -95,23 +95,23 @@ namespace HelloWorldMessenger
 
 
 
-    public class UsersAdapter : BaseAdapter<User>
+    public class UsersAdapter : BaseAdapter<UserData>
     {
 
         Context ctx;
-        List<User> list;
+        List<UserData> list;
 
 
 
 
-        public UsersAdapter(Context context, IEnumerable<User> items)
+        public UsersAdapter(Context context, IEnumerable<UserData> items)
         {
             ctx = context;
-            list = new List<User>(items);
+            list = new List<UserData>(items);
 
         }
 
-        public override User this[int position]
+        public override UserData this[int position]
         {
             get
             {
@@ -155,13 +155,13 @@ namespace HelloWorldMessenger
     }
 
 
-    public class User : Java.Lang.Object
+    public class UserData : Java.Lang.Object
     {
         public string Name = "";
         public string Login = "";
         public string Info = "";
 
-        public User(string name, string login, string info)
+        public UserData(string name, string login, string info)
         {
             Name = name;
             Login = login;
