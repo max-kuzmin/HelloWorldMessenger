@@ -20,7 +20,7 @@ using Android.Graphics;
 
 namespace HelloWorldMessenger
 {
-    public class HelpersAPI
+    public static class HelpersAPI
     {
 
         //doto картинки в сообщениях, диалоги нескольких пользователей

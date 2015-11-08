@@ -1,0 +1,228 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="HelloWorldMessenger.UserInfoActivity">
+    <Position X="16" Y="4" Width="1.5" />
+    <Members>
+      <Field Name="userLogin" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAACAAAAAACAAAABAAAAA=</HashCode>
+      <FileName>UserInfoActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HelloWorldMessenger.AsyncGetMessagesFromAPI">
+    <Position X="2.75" Y="3.75" Width="2.25" />
+    <Members>
+      <Field Name="ctx" Hidden="true" />
+      <Field Name="dialog_id" Hidden="true" />
+      <Field Name="items" Hidden="true" />
+      <Field Name="lastTime" Hidden="true" />
+      <Field Name="messages" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAhAAAAAAAAgAAgAAAAAAAAABIAAAAAAAAAA=</HashCode>
+      <FileName>AsyncTasks.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HelloWorldMessenger.AsyncGetAvatar">
+    <Position X="0.5" Y="1.5" Width="1.75" />
+    <Members>
+      <Field Name="img" Hidden="true" />
+      <Field Name="imgView" Hidden="true" />
+      <Field Name="login" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAgAAEAAAAAAAAAAAAAAAAAQAAAAAAAAAEAA=</HashCode>
+      <FileName>AsyncTasks.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HelloWorldMessenger.AsyncGetDialogsFromAPI">
+    <Position X="2.75" Y="0.5" Width="2" />
+    <Members>
+      <Field Name="ctx" Hidden="true" />
+      <Field Name="dialogs" Hidden="true" />
+      <Field Name="items" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAgAAAAAAAAgAAAAAAAAAAAAAIAAIAAAAAAA=</HashCode>
+      <FileName>AsyncTasks.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HelloWorldMessenger.ChangeUserInfoActivity">
+    <Position X="13.5" Y="0.75" Width="2" />
+    <Members>
+      <Field Name="imgNew" Hidden="true" />
+      <Field Name="uploadImgView" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAAAEAAACAAEACAAAAAgAAAAAIAAAAA=</HashCode>
+      <FileName>ChangeUserInfoActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HelloWorldMessenger.DialogsActivity">
+    <Position X="19.5" Y="0.5" Width="2.25" />
+    <Members>
+      <Field Name="dialogs" Hidden="true" />
+      <Field Name="t" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAEAgCAAgAAAAAQIABAAAAA=</HashCode>
+      <FileName>DialogsActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HelloWorldMessenger.DialogsAdapter">
+    <Position X="9.25" Y="1.5" Width="1.75" />
+    <Members>
+      <Property Name="Count" Hidden="true" />
+      <Field Name="ctx" Hidden="true" />
+      <Field Name="list" Hidden="true" />
+      <Property Name="this" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAIAAgAAAAAAAEAACAAAAAQAAAAAAAAAIAABAAAAAAA=</HashCode>
+      <FileName>DialogsActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HelloWorldMessenger.HelpersAPI">
+    <Position X="7" Y="0.5" Width="2.25" />
+    <Members>
+      <Field Name="authOnlineChecked" Hidden="true" />
+      <Field Name="CookieDomain" Hidden="true" />
+      <Field Name="myLogin" Hidden="true" />
+      <Property Name="MyLogin" Hidden="true" />
+      <Property Name="NeedCheckInBackground" Hidden="true" />
+      <Field Name="online" Hidden="true" />
+      <Property Name="Online" Hidden="true" />
+      <Field Name="server" Hidden="true" />
+      <Property Name="Server" Hidden="true" />
+      <Field Name="testMode" Hidden="true" />
+      <Field Name="timeout" Hidden="true" />
+      <Field Name="updInterval" Hidden="true" />
+      <Property Name="UpdInterval" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Properties" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAYAAAIEAAgQAkAIEAJAQQAAAAAACAgAAAAc=</HashCode>
+      <FileName>HelpersAPI.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HelloWorldMessenger.HelpersDB">
+    <Position X="6.75" Y="4" Width="2" />
+    <Members>
+      <Field Name="db" Hidden="true" />
+      <Field Name="dbAsync" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAgAAIAAAAAQAAABAAAAAAACAAAAEAACAAAAABBAAgA=</HashCode>
+      <FileName>HelpersDB.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HelloWorldMessenger.MessagesActivity">
+    <Position X="9.5" Y="4.25" Width="2" />
+    <Members>
+      <Field Name="dialog_id" Hidden="true" />
+      <Field Name="dialogName" Hidden="true" />
+      <Field Name="messages" Hidden="true" />
+      <Field Name="t" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAEAAAAAAAgDAAgAABAAQDABAAACA=</HashCode>
+      <FileName>MessagesActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HelloWorldMessenger.MessagesAdapter">
+    <Position X="11.75" Y="3.5" Width="2" />
+    <Members>
+      <Property Name="Count" Hidden="true" />
+      <Field Name="ctx" Hidden="true" />
+      <Field Name="list" Hidden="true" />
+      <Property Name="this" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAIAAgAAAEAAAEAACAAAAAQAAAAAAAAAIAABAAAAAAA=</HashCode>
+      <FileName>MessagesActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HelloWorldMessenger.RenameDialog">
+    <Position X="18" Y="3.25" Width="1.5" />
+    <Members>
+      <Field Name="text" Hidden="true" />
+      <Property Name="Text" Hidden="true" />
+      <Field Name="v" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAAAgAAAAgAAAAAAAAAAAAIABAACAAAAAA=</HashCode>
+      <FileName>MessagesActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HelloWorldMessenger.NewMessagesService">
+    <Position X="5" Y="2" Width="1.75" />
+    <Members>
+      <Field Name="t" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAAAAAAEAAAACAAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>NewMessagesService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HelloWorldMessenger.RegisterActivity">
+    <Position X="16.75" Y="0.5" Width="2.25" />
+    <Members>
+      <Field Name="imgNew" Hidden="true" />
+      <Field Name="uploadImgView" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAACAAkACAAAAAgAAAAAIAAAAA=</HashCode>
+      <FileName>RegisterActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HelloWorldMessenger.SearchUsersActivity">
+    <Position X="14" Y="3.75" Width="1.75" />
+    <Members>
+      <Field Name="adapter" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAACAAAAACAIAAAAAAAAAAIAAAA=</HashCode>
+      <FileName>SearchUsersActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HelloWorldMessenger.UsersAdapter">
+    <Position X="11.25" Y="0.5" Width="2" />
+    <Members>
+      <Property Name="Count" Hidden="true" />
+      <Field Name="ctx" Hidden="true" />
+      <Field Name="list" Hidden="true" />
+      <Property Name="this" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAIAAgAAAAAAAEAACAAAAAQAAAAAAAAAIAABAAAAAAA=</HashCode>
+      <FileName>SearchUsersActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HelloWorldMessenger.SingInActivity">
+    <Position X="19.75" Y="3.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAAAEAAAAAAgACAAAAAAAAAAABAAAAA=</HashCode>
+      <FileName>SingInActivity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
