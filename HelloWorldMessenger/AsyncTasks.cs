@@ -37,7 +37,7 @@ namespace HelloWorldMessenger
         protected override Java.Lang.Object DoInBackground(params Java.Lang.Object[] @params)
         {
 
-            if (HelpersAPI.Online)
+            if (HelpersAPI.AuthCheckAPI())
             {
 
                 //запрос на сервер за новыми сообщениями
@@ -70,7 +70,7 @@ namespace HelloWorldMessenger
         {
             base.OnPostExecute(result);
 
-            if (items.Count > 0)
+            if (items.Count > 0 && HelpersAPI.Online)
             {
                 (messages.Adapter as MessagesAdapter).AddItems(items);
                 messages.SetSelection(messages.Adapter.Count - 1);
@@ -107,7 +107,7 @@ namespace HelloWorldMessenger
         {
             base.OnPostExecute(result);
 
-            if (img != null)
+            if (img != null && HelpersAPI.Online)
             {
                 imgView.SetImageBitmap(img);
             }
@@ -134,7 +134,7 @@ namespace HelloWorldMessenger
         protected override Java.Lang.Object DoInBackground(params Java.Lang.Object[] @params)
         {
 
-            if (HelpersAPI.Online)
+            if (HelpersAPI.AuthCheckAPI())
             {
 
                 //получение диалогов из апи
@@ -161,7 +161,8 @@ namespace HelloWorldMessenger
         {
             base.OnPostExecute(result);
 
-            dialogs.Adapter = new DialogsAdapter(ctx, items);
+            if (HelpersAPI.Online && items.Count>0)
+                dialogs.Adapter = new DialogsAdapter(ctx, items);
 
         }
     }

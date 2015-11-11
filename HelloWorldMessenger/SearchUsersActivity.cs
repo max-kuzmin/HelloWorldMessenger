@@ -61,6 +61,8 @@ namespace HelloWorldMessenger
                     usersList.Adapter = adapter; 
                 }
             }
+            else 
+                Toast.MakeText(this, Resource.String.NoInternet, ToastLength.Long).Show();
         }
 
         private void UsersList_ItemClick(object sender, AdapterView.ItemClickEventArgs e)

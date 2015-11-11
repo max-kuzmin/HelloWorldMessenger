@@ -101,6 +101,8 @@ namespace HelloWorldMessenger
                 t.SetGravity(GravityFlags.Center, 0, 0);
                 t.Show(); 
             }
+            else
+                Toast.MakeText(this, Resource.String.NoInternet, ToastLength.Long).Show();
         }
 
         protected override void OnStart()

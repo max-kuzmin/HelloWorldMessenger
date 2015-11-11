@@ -98,6 +98,8 @@ namespace HelloWorldMessenger
                     t.Show();
                 }
             }
+            else
+                Toast.MakeText(this, Resource.String.NoInternet, ToastLength.Long).Show();
         }
 
         protected override void OnStart()

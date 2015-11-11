@@ -59,6 +59,9 @@ namespace HelloWorldMessenger
                     StartActivity(new Intent(this, typeof(DialogsActivity)));
                 }
             }
+            else
+                Toast.MakeText(this, Resource.String.NoInternet, ToastLength.Long).Show();
+
         }
 
 

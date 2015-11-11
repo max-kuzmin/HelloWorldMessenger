@@ -46,10 +46,15 @@ namespace HelloWorldMessenger
         //обработка клика на пункте меню сверху
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
-            if (item.ItemId == Resource.Id.AddDialogButton)
+            if (HelpersAPI.Online)
             {
-                StartActivity(new Intent(this, typeof(SearchUsersActivity)));
+                if (item.ItemId == Resource.Id.AddDialogButton)
+                {
+                    StartActivity(new Intent(this, typeof(SearchUsersActivity)));
+                }
             }
+            else
+                Toast.MakeText(this, Resource.String.NoInternet, ToastLength.Long).Show();
 
             return base.OnOptionsItemSelected(item);
         }
@@ -66,7 +71,7 @@ namespace HelloWorldMessenger
             dialogs = FindViewById<ListView>(Resource.Id.DialogsList);
             dialogs.ItemClick += Dialogs_ItemClick;
 
-            if (!HelpersAPI.AuthCheckAPI() && HelpersAPI.MyLogin == "")
+            if (HelpersAPI.MyLogin == "")
             {
                 //если не залогинился - возврат к авторизации
                 StartActivity(new Intent(this, typeof(SingInActivity)));
@@ -105,7 +110,7 @@ namespace HelloWorldMessenger
         protected override void OnPause()
         {
             base.OnPause();
-            t.Cancel();
+            if (t != null) t.Cancel();
             HelpersAPI.NeedCheckInBackground = true;
         }
     }
