@@ -1,16 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
 using Android.App;
 using Android.Content;
 using Android.OS;
-using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using System.Json;
-using Java.Lang;
 using Java.Util;
 
 namespace HelloWorldMessenger
@@ -41,8 +37,6 @@ namespace HelloWorldMessenger
 
             ActionBar.Title = dialogName;
         }
-
-
 
 
 
@@ -161,9 +155,6 @@ namespace HelloWorldMessenger
                 if (result.ContainsKey("status") && result["status"] == "true")
                 {
                     messageText.Text = "";
-                    //асинхронно проверяем новые сообщения - не надо так, начинаю лезть баги
-                    //AsyncGetMessagesFromAPI async = new AsyncGetMessagesFromAPI(this, messages, dialog_id);
-                    //async.Execute();
                 }
             }
             else
@@ -351,8 +342,6 @@ namespace HelloWorldMessenger
 
         new public event EventHandler<EventArgs> OnDismiss;
     }
-
-
 
 
     //событие для таймера обновления сообщений

@@ -1,13 +1,9 @@
 ﻿using System;
 using Android.App;
 using Android.Content;
-using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
-using System.Net;
-using System.Json;
-using System.IO;
 
 namespace HelloWorldMessenger
 {
@@ -38,8 +34,6 @@ namespace HelloWorldMessenger
             base.OnPause();
             Finish();
         }
-
-
 
 
         private void RegisterButton_Click(object sender, EventArgs e)

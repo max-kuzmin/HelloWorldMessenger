@@ -1,29 +1,16 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Json;
-using System.Threading.Tasks;
-
 using Android.App;
 using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using System.Net;
 using System.IO;
 using Android.Net;
-using Java.Net;
-using Android.Media;
 using Android.Graphics;
 
 namespace HelloWorldMessenger
 {
     public static class HelpersAPI
     {
-
-        //doto картинки в сообщениях, диалоги нескольких пользователей
 
         //static string server = "http://169.254.80.80/HelloWorldAPI/";
         //static string CookieDomain = "169.254.80.80";
@@ -89,11 +76,6 @@ namespace HelloWorldMessenger
                 ConnectivityManager conMgr = (ConnectivityManager)Application.Context.GetSystemService(Context.ConnectivityService);
                 NetworkInfo netInfo = conMgr.ActiveNetworkInfo;
                 if (!testMode && (netInfo == null || !netInfo.IsConnected)) throw new Exception();
-
-
-                //param = URLEncoder.Encode(param, "WINDOWS-1251");
-                //param = param.Replace("%2F", "/").Replace("%3F", "?").Replace("%3D", "=").Replace("%26", "&").Replace("%2523", "#");
-
 
                 //запрос к апи
                 System.Uri address = new System.Uri(new System.Uri(Server), param);

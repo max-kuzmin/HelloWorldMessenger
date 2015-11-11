@@ -1,19 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using Android.Graphics;
 using Android.App;
 using Android.Content;
 using Android.OS;
-using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using System.Json;
-using Java.Lang;
-using System.Collections;
 using Java.Util;
 
 namespace HelloWorldMessenger
@@ -29,7 +22,6 @@ namespace HelloWorldMessenger
         {
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.Dialogs);
-
 
             this.SetTitle(Resource.String.Dialogs);
             
@@ -61,9 +53,6 @@ namespace HelloWorldMessenger
 
 
 
-
-
-
         protected override void OnStart()
         {
             base.OnStart();
@@ -87,8 +76,6 @@ namespace HelloWorldMessenger
             //проверка диалогов каждые 10 сек
             t = new Timer();
             t.ScheduleAtFixedRate(new UpdDialogsTimerTask(this, dialogs), 0, HelpersAPI.UpdInterval);
-
-
 
         }
 
@@ -114,7 +101,6 @@ namespace HelloWorldMessenger
             HelpersAPI.NeedCheckInBackground = true;
         }
     }
-
 
 
     public class DialogsAdapter : BaseAdapter<DialogData>
