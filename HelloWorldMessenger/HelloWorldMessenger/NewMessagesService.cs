@@ -42,7 +42,7 @@ namespace HelloWorldMessenger
         private void T_Elapsed(object sender, ElapsedEventArgs e)
         {
 
-            if (HelpersAPI.AuthCheckAPI() && HelpersAPI.NeedCheckInBackground)
+            if (HelpersAPI.NeedCheckInBackground && HelpersAPI.AuthCheckAPI())
             {
                 JsonValue result = HelpersAPI.RequestToAPI("dialog/check");
 

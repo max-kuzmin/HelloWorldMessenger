@@ -121,9 +121,7 @@ namespace HelloWorldMessenger
 
                 authOnlineChecked = false;
 
-                ISharedPreferences prefs = Application.Context.GetSharedPreferences("Setting", FileCreationMode.Private);
 
-                Toast.MakeText(Application.Context, Resource.String.NoInternet, ToastLength.Long).Show();
             }
 
             return json;
@@ -170,9 +168,6 @@ namespace HelloWorldMessenger
                 online = false;
                 authOnlineChecked = false;
 
-                ISharedPreferences prefs = Application.Context.GetSharedPreferences("Setting", FileCreationMode.Private);
-
-                Toast.MakeText(Application.Context, Resource.String.NoInternet, ToastLength.Long).Show();
             }
 
             return img;
@@ -230,9 +225,7 @@ namespace HelloWorldMessenger
                 online = false;
                 authOnlineChecked = false;
 
-                ISharedPreferences prefs = Application.Context.GetSharedPreferences("Setting", FileCreationMode.Private);
 
-                Toast.MakeText(Application.Context, Resource.String.NoInternet, ToastLength.Long).Show();
             }
 
             return json;
@@ -322,7 +315,6 @@ namespace HelloWorldMessenger
                 //если ошибка - нет интернета
                 online = false;
                 authOnlineChecked = false;
-                Toast.MakeText(Application.Context, Resource.String.NoInternet, ToastLength.Long).Show();
             }
 
             return false;

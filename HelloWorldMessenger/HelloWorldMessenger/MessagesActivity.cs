@@ -46,16 +46,6 @@ namespace HelloWorldMessenger
 
 
 
-
-
-
-
-
-
-
-
-
-
         public override bool OnCreateOptionsMenu(IMenu menu)
         {
             MenuInflater.Inflate(Resource.Layout.MessagesMenu, menu);
@@ -66,32 +56,37 @@ namespace HelloWorldMessenger
         //обработка клика на пункте меню сверху
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
-            if (item.ItemId == Resource.Id.LogOutMenuButton)
+            if (HelpersAPI.Online)
             {
-                HelpersAPI.LogOut();
-                StartActivity(new Intent(this, typeof(SingInActivity)));
-            }
-            else if (item.ItemId == Resource.Id.RenameDialogMenuButton)
-            {
-                RenameDialog dialog = new RenameDialog();
-                dialog.OnDismiss += Dialog_DismissEvent;
-                dialog.Show(FragmentManager, "RenameDialog");
-            }
-            else if (item.ItemId == Resource.Id.DeleteDialogMenuButton)
-            {
-                JsonValue result = HelpersAPI.RequestToAPI("dialog/delete?dialog_id=" + dialog_id);
-                if (result.ContainsKey("status") && result["status"] == "true")
+                if (item.ItemId == Resource.Id.LogOutMenuButton)
                 {
-                    StartActivity(new Intent(this, typeof(DialogsActivity)));
+                    HelpersAPI.LogOut();
+                    StartActivity(new Intent(this, typeof(SingInActivity)));
+                }
+                else if (item.ItemId == Resource.Id.RenameDialogMenuButton)
+                {
+                    RenameDialog dialog = new RenameDialog();
+                    dialog.OnDismiss += Dialog_DismissEvent;
+                    dialog.Show(FragmentManager, "RenameDialog");
+                }
+                else if (item.ItemId == Resource.Id.DeleteDialogMenuButton)
+                {
+                    JsonValue result = HelpersAPI.RequestToAPI("dialog/delete?dialog_id=" + dialog_id);
+                    if (result.ContainsKey("status") && result["status"] == "true")
+                    {
+                        StartActivity(new Intent(this, typeof(DialogsActivity)));
+                    }
+                }
+                else if (item.ItemId == Resource.Id.ChangeMyInfoButton)
+                {
+                    if (HelpersAPI.Online)
+                    {
+                        StartActivity(new Intent(this, typeof(ChangeUserInfoActivity)));
+                    }
                 }
             }
-            else if (item.ItemId == Resource.Id.ChangeMyInfoButton)
-            {
-                if (HelpersAPI.Online)
-                {
-                    StartActivity(new Intent(this, typeof(ChangeUserInfoActivity)));
-                }
-            }
+            else
+                Toast.MakeText(this, Resource.String.NoInternet, ToastLength.Long).Show();
 
             return base.OnOptionsItemSelected(item);
         }
@@ -115,7 +110,7 @@ namespace HelloWorldMessenger
             base.OnStart();
 
             //проверка на онлайн и авторизацию
-            if (!HelpersAPI.AuthCheckAPI() && HelpersAPI.MyLogin == "")
+            if (HelpersAPI.MyLogin == "")
             {
                 StartActivity(new Intent(this, typeof(SingInActivity)));
                 return;
@@ -171,6 +166,8 @@ namespace HelloWorldMessenger
                     //async.Execute();
                 }
             }
+            else
+                Toast.MakeText(this, Resource.String.NoInternet, ToastLength.Long).Show();
 
         }
 
@@ -185,6 +182,8 @@ namespace HelloWorldMessenger
                 intent.PutExtra("isAddDialog", false);
                 StartActivity(intent);
             }
+            else
+                Toast.MakeText(this, Resource.String.NoInternet, ToastLength.Long).Show();
         }
 
 
@@ -192,7 +191,7 @@ namespace HelloWorldMessenger
         {
             base.OnPause();
             HelpersAPI.NeedCheckInBackground = true;
-            t.Cancel();
+            if (t != null)  t.Cancel();
         }
     }
 

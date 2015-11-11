@@ -46,6 +46,8 @@ namespace HelloWorldMessenger
         {
             if (HelpersAPI.Online)
                 StartActivity(new Intent(this, typeof(RegisterActivity)));
+            else
+                Toast.MakeText(this, Resource.String.NoInternet, ToastLength.Long).Show();
         }
 
 
@@ -62,6 +64,8 @@ namespace HelloWorldMessenger
 
             FindViewById<EditText>(Resource.Id.LoginField).Text = HelpersAPI.MyLogin;
 
+            if (!HelpersAPI.Online) Toast.MakeText(this, Resource.String.NoInternet, ToastLength.Long).Show();
+
         }
 
         private void SingInButton_Click(object sender, EventArgs e)
@@ -70,7 +74,7 @@ namespace HelloWorldMessenger
             string pass = FindViewById<EditText>(Resource.Id.PassField).Text;
 
             //логин, если онлайн и верный пароль
-            if (HelpersAPI.SinginToAPI(login, pass) && HelpersAPI.Online)
+            if (HelpersAPI.Online && HelpersAPI.SinginToAPI(login, pass))
             {
                 StartActivity(new Intent(this, typeof(DialogsActivity)));
                 StartService(new Intent(this, typeof(NewMessagesService)));
@@ -83,11 +87,17 @@ namespace HelloWorldMessenger
                 return;
             }
 
-
-            //если неверный логин и пароль
-            Toast t = Toast.MakeText(this, Resource.String.LoginPassError, ToastLength.Long);
-            t.SetGravity(GravityFlags.Center,0,0);
-            t.Show();
+            if (!HelpersAPI.Online)
+            {
+                Toast.MakeText(this, Resource.String.NoInternet, ToastLength.Long).Show();
+            }
+            else
+            {
+                //если неверный логин и пароль
+                Toast t = Toast.MakeText(this, Resource.String.LoginPassError, ToastLength.Long);
+                t.SetGravity(GravityFlags.Center, 0, 0);
+                t.Show();
+            }
         }
     }
 }
