@@ -1,0 +1,11 @@
+﻿################################################################################
+# Данный GITIGNORE-файл был автоматически создан Microsoft(R) Visual Studio.
+################################################################################
+
+/HelloWorldMessenger/bin/
+/HelloWorldMessenger/obj/
+/packages
+/UITests/bin/
+/UITests/obj/
+*.bak
+*.suo

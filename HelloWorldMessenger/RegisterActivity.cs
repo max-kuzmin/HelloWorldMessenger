@@ -66,7 +66,7 @@ namespace HelloWorldMessenger
                 string name = FindViewById<EditText>(Resource.Id.NameField).Text;
                 string info = FindViewById<EditText>(Resource.Id.InfoField).Text;
 
-                if (login.Length > 0 && pass.Length > 0 && name.Length > 0 && info.Length > 0)
+                if (login.Length >= 3 && pass.Length >= 3 && name.Length > 0 && info.Length > 0)
                 {
                     string param = "register?login=" + login + "&pass=" + pass + "&name=" + name + "&info=" + info;
 

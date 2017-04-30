@@ -12,11 +12,11 @@ namespace HelloWorldMessenger
     public static class HelpersAPI
     {
 
-        //static string server = "http://169.254.80.80/HelloWorldAPI/";
-        //static string CookieDomain = "169.254.80.80";
+        static string server = "http://192.168.137.1/HelloWorldAPI/";
+        static string CookieDomain = "192.168.137.1";
 
-        static string server = "http://api-maxgsomgsom.rhcloud.com/";
-        static string CookieDomain = "api-maxgsomgsom.rhcloud.com";
+        //static string server = "http://api-maxgsomgsom.rhcloud.com/";
+        //static string CookieDomain = "api-maxgsomgsom.rhcloud.com";
 
         static bool testMode = false;
 
