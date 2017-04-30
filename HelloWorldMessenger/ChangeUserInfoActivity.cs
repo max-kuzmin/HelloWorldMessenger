@@ -68,7 +68,7 @@ namespace HelloWorldMessenger
                 string name = FindViewById<EditText>(Resource.Id.NameField).Text;
                 string info = FindViewById<EditText>(Resource.Id.InfoField).Text;
 
-                if (passOld.Length > 0 && passNew.Length > 0 && name.Length > 0 && info.Length > 0)
+                if (passOld.Length >= 3 && passNew.Length >= 3 && name.Length > 0 && info.Length > 0)
                 {
                     string param = "user/change?oldpass=" + passOld + "&newpass=" + passNew + "&name=" + name + "&info=" + info;
 
@@ -81,15 +81,15 @@ namespace HelloWorldMessenger
                         if (imgNew != null) HelpersAPI.PutImageToAPI(imgNew);
 
                         StartActivity(new Intent(this, typeof(DialogsActivity)));
+                        return;
                     }
+
                 }
-                else
-                {
-                    //при ошибке вывод сообщения
-                    Toast t = Toast.MakeText(this, Resource.String.SaveError, ToastLength.Long);
-                    t.SetGravity(GravityFlags.Center, 0, 0);
-                    t.Show();
-                }
+
+                //при ошибке вывод сообщения
+                Toast t = Toast.MakeText(this, Resource.String.SaveError, ToastLength.Long);
+                t.SetGravity(GravityFlags.Center, 0, 0);
+                t.Show();
             }
             else
                 Toast.MakeText(this, Resource.String.NoInternet, ToastLength.Long).Show();

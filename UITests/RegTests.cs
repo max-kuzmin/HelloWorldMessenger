@@ -5,6 +5,9 @@ using NUnit.Framework;
 using Xamarin.UITest;
 using Xamarin.UITest.Queries;
 using Xamarin.UITest.Android;
+using HelloWorldMessenger;
+using System.Resources;
+
 
 namespace UITests
 {
@@ -17,7 +20,9 @@ namespace UITests
         public void Before()
         {
             app = ConfigureApp.Android.StartApp();
-            app.Tap("Register");
+            app.Tap("RegisterButton");
+            app.WaitForElement("LoginField");
+
         }
 
 
@@ -25,7 +30,7 @@ namespace UITests
         public void RegError1()
         {
             app.Tap("RegisterButton");
-            app.WaitForElement("error");
+            app.WaitForElement("Registration error");
         }
 
 
@@ -33,8 +38,9 @@ namespace UITests
         public void RegError2()
         {
             app.EnterText("LoginField", Helpers.GetRandStr());
+            app.DismissKeyboard();
             app.Tap("RegisterButton");
-            app.WaitForElement("error");
+            app.WaitForElement("Registration error");
         }
 
         [Test]
@@ -42,8 +48,9 @@ namespace UITests
         {
             app.EnterText("LoginField", Helpers.GetRandStr());
             app.EnterText("PassField", Helpers.GetRandStr());
+            app.DismissKeyboard();
             app.Tap("RegisterButton");
-            app.WaitForElement("error");
+            app.WaitForElement("Registration error");
         }
 
         [Test]
@@ -51,8 +58,9 @@ namespace UITests
         {
             app.EnterText("LoginField", "12");
             app.EnterText("PassField", "12");
+            app.DismissKeyboard();
             app.Tap("RegisterButton");
-            app.WaitForElement("error");
+            app.WaitForElement("Registration error");
         }
 
 
@@ -63,6 +71,7 @@ namespace UITests
             app.EnterText("PassField", Helpers.GetRandStr());
             app.EnterText("NameField", Helpers.GetRandStr());
             app.EnterText("InfoField", Helpers.GetRandStr());
+            app.DismissKeyboard();
             app.Tap("RegisterButton");
             app.WaitForElement("DialogsList");
 
@@ -72,8 +81,8 @@ namespace UITests
         public void SelectAvatar()
         {
             app.Tap("AvatarView");
-            app.Back();
-            app.WaitForElement("AvatarView");
+            //app.Back();
+            //app.WaitForElement("AvatarView");
         }
     }
 }
